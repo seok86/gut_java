@@ -1,0 +1,16 @@
+package com.gut.ui.views.project.actions;
+
+import org.eclipse.jface.action.Action;
+
+public class NewTestFileAction extends Action {
+	
+	public NewTestFileAction() {
+		super("New Test File", null);
+	}
+	
+	@Override
+	public void run() {
+		//WizardUtil.openNewWizard(NewPlanFileWizard.ID);
+	}
+	
+}

@@ -1,0 +1,65 @@
+package com.gut.ui.actions;
+
+import java.io.IOException;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.FileEditorInput;
+
+import com.gut.core.adb.ADB;
+
+import common.ui.cache.ImageCache;
+import common.ui.editors.EditorUtil;
+import common.ui.workbench.toolbar.ToolbarAction;
+
+
+public class ExecuteTestAction extends ToolbarAction {
+	
+	private ADB adb;
+	
+	public ExecuteTestAction() { 
+		super("execute");
+		setImageDescriptor(ImageCache.getDescriptor("execute.png"));
+		
+		try {
+			adb = new ADB();
+		} catch(Exception e) { e.printStackTrace(); }
+	}
+	
+	@Override
+	protected void init() {
+		setText("Execute  ");
+	}
+	
+	@Override
+	public void run() {
+		IEditorPart editorPart = EditorUtil.getCurrentEditor();
+		if(editorPart == null) return;
+		FileEditorInput editorInput = (FileEditorInput) editorPart.getEditorInput();
+		IFile file = editorInput.getFile();
+		
+		// Ready file for inputs - TODO
+		
+		// Push Apk - TODO
+		
+		// Start Apk - TODO
+		
+		// Exploration
+		try {
+			explore();
+		} catch(Exception e) { e.printStackTrace(); }
+		
+	}
+	
+	private void explore() throws IOException {
+		// get dump
+		adb.deleteScreenshot(null);
+		adb.createScreenshot(null);
+		adb.pullScreenshot(null);
+		
+		// for children
+		
+		// recursive
+	}
+
+}

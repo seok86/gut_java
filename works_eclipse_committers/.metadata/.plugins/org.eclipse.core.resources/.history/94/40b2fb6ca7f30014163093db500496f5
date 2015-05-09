@@ -1,0 +1,134 @@
+package common.ui.workbench;
+
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: WorkspaceSelectionDialog.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class WorkspaceSelectionDialog extends TitleAreaDialog {
+	
+	public interface Listener {
+		void okPressed(String path);
+	}
+	
+	private Listener listener;
+	private String[] history;
+	private String productName;
+	
+	private Label label;
+	private Combo combo;
+	private Button button;
+	private Button check;
+	
+	public WorkspaceSelectionDialog(Shell parentShell, String[] history, Listener listener, String productName) {
+		super(parentShell);
+		this.history = history;
+		this.listener = listener;
+		this.productName = productName;
+	}
+	
+	@Override
+	protected void setShellStyle(int newShellStyle) {           
+	    super.setShellStyle(SWT.CLOSE | SWT.MODELESS| SWT.BORDER | SWT.TITLE | SWT.ON_TOP);
+	    setBlockOnOpen(true);
+	}
+	
+	@Override
+	protected void configureShell(Shell shell) {
+		super.configureShell(shell);
+		shell.setText("Workspace Launcher");
+	}
+
+	@Override
+	protected boolean isResizable() { return true; }
+
+	@Override
+	public void create() {
+		super.create();
+		setTitle("Select a workspace");
+		setMessage(productName+" stores your projects in a folder called a workspace.\nChoose a workspace folder to use for this session.", IMessageProvider.NONE);
+	}
+
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent);
+		
+		Composite container = new Composite(composite, SWT.NONE);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		GridLayout layout = new GridLayout(3, false);
+		layout.horizontalSpacing = 5;
+		layout.verticalSpacing = 2;
+		layout.marginLeft = layout.marginRight = layout.marginTop = layout.marginBottom = 5; 
+		layout.marginTop = 10;
+		container.setLayout(layout);
+		
+		label = new Label(container, SWT.NONE);
+		label.setText("Wokspace:");
+		
+		combo = new Combo(container, SWT.BORDER);
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		combo.setItems(history);
+		combo.setText(history.length == 0 ? "" : history[0]);
+		
+		button = new Button(container, SWT.PUSH);
+		button.setText("Browse...");
+		setButtonLayoutData(button);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dlg = new DirectoryDialog(getShell());
+				dlg.setFilterPath(combo.getText());
+				dlg.setText("Select Workspace Directory");
+				dlg.setMessage("Select the workspace directory to use.");
+				String path = dlg.open();
+				if(path != null){
+					combo.setText(path);
+				}
+			}
+		});
+		
+		Label dummy = new Label(container, SWT.NONE);
+		dummy.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		
+		check = new Button(container, SWT.CHECK);
+		check.setText("Use this as the default and do not ask again");
+		check.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+		
+		applyDialogFont(composite);
+		return composite;
+	}
+	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
+	}
+	
+	@Override
+	protected void okPressed() {
+		listener.okPressed(combo.getText());
+		super.okPressed();
+	}
+	
+}

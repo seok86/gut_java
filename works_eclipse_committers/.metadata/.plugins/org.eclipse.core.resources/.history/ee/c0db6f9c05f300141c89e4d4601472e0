@@ -1,0 +1,59 @@
+package com.gut.core.adb.internal;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProcessRunner {
+	
+	private ProcessBuilder mProcessBuilder;
+
+	private List<String> mOutput = new ArrayList<String>();
+
+	public ProcessRunner(List<String> command) {
+		mProcessBuilder = new ProcessBuilder(command).redirectErrorStream(true);
+	}
+
+	public int run(long timeout) throws IOException {
+		final Process p = mProcessBuilder.start();
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				String line;
+				mOutput.clear();
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+					while ((line = br.readLine()) != null) { mOutput.add(line); }
+					br.close();
+				} catch (IOException e) { e.printStackTrace(); }
+			}
+		};
+		t.start();
+		try {
+			t.join(timeout);
+		} catch (InterruptedException e) { e.printStackTrace(); }
+		if (t.isAlive()) {
+			throw new IOException("external process not terminating.");
+		}
+		try {
+			int retCode = p.waitFor();
+			if(retCode != 0) { throw new IOException("exit with return code "+retCode); }
+		} catch (InterruptedException e) { e.printStackTrace(); throw new IOException(e); }
+	}
+
+	public List<String> getOutput() {
+		return mOutput;
+	}
+	
+	public String getOutputBlob() {
+		StringBuilder sb = new StringBuilder();
+		for (String line : mOutput) {
+			sb.append(line);
+			sb.append(System.getProperty("line.separator"));
+		}
+		return sb.toString();
+	}
+	
+}

@@ -1,0 +1,121 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+
+import com.gut.core.adb.ADB;
+import com.gut.core.adb.dump.Node;
+import com.gut.core.adb.dump.RootWindowNode;
+import com.gut.core.adb.dump.UiDumpReader;
+import com.gut.core.adb.dump.UiNode;
+import common.core.resources.ResourceUtil;
+
+public class Runtime {
+	//-----------------------------------------------------------------------------
+	private static Explorer inst;
+	public static Explorer getInst() {
+		if(inst == null) { inst = new Explorer(); }
+		return inst;
+	}
+	//-----------------------------------------------------------------------------
+	private Runtime() { }
+	
+	public void explore(IFile targetGutFile, String device) throws Exception {
+		ADB adb = new ADB(device);
+		
+		IFolder dirWork = targetGutFile.getProject().getFolder(targetGutFile.getParent().getProjectRelativePath().append(targetGutFile.getName().replace("."+targetGutFile.getFileExtension(), "_gut")));
+		dirWork.create(true, true, null);
+		
+		String path = "";
+		_explore(adb, dirWork, path);
+		
+	}
+	 
+	
+	private void _explore(ADB adb, File dirWork) {
+		//_takeScreen(adb, dirWork, path);
+		Screen oldScreen = null;
+		
+		while(true) {
+			Element element;
+			if(oldScreen != null) {  
+				element = oldScreen.getNotYetClicked();
+				if(element == null) { break; }
+				_click(element); // click(adb) and check clicked
+			}
+			Screen newScreen = _screenshot(); // screenshot(adb)
+			if(oldScreen != null && element != null) {
+				_link(oldScreen, element, newScreen);
+			}
+			oldScreen = newScreen;
+		}
+		
+	}
+	
+	private void _explore(ADB adb, IFolder dirWork, String path) throws Exception {
+		_takeScreen(adb, dirWork, path);
+		
+		// TODO: take screen 1 & notify
+		
+		// TODO: get clickable a
+		
+		// old = current
+		
+		// TODO: 1) init or command(click element)
+		// if old == null, then next
+		// else, old.getClickableChildren() 
+		// click one of them. element = id;
+
+		
+		// TODO: 2) take new screen and set current
+		
+		// TODO: 3) connection (old->element->current)
+		
+		// TODO: 4) old = current;
+		
+		List<UiNode> targetNodes = new ArrayList<UiNode>();
+		for(UiNode targetNode : targetNodes) {
+			String newPath = path+">"+targetNode.getAttribute("id");
+			_touch(adb, targetNode);
+			_explore(adb, dirWork, newPath);
+		}
+	}
+	
+	private List<UiNode> _getClickables(IFolder dirWork, String path) throws Exception {
+		File dir = ResourceUtil.toFile(dirWork);
+		File fileUiDump = new File(dir, "uidump_"+path+".xml");
+		UiDumpReader reader = new UiDumpReader(fileUiDump);
+		RootWindowNode node = (RootWindowNode) reader.getRoot();
+		
+		node.getNodesAt(px, py)
+		
+		//node.getChildrenList();
+		return Collections.EMPTY_LIST;
+	}
+	
+	private void _touch(ADB adb, Node targetNode) {
+		System.out.println("touch");
+	}
+	private void _takeScreen(ADB adb, IFolder dirWork, String path) throws Exception {
+		File dir = ResourceUtil.toFile(dirWork);
+		// Screenshot
+		File fileScreenshot = new File(dir, "screenshot_"+path+".png");
+		adb.deleteScreenshot();
+		adb.createScreenshot();
+		adb.pullScreenshot(fileScreenshot);
+		
+		// UI Dump
+		File fileUiDump = new File(dir, "uidump_"+path+".xml");
+		adb.deleteUiDump();
+		adb.createUiDump();
+		adb.pullUiDump(fileUiDump);
+		
+	}
+
+	
+}

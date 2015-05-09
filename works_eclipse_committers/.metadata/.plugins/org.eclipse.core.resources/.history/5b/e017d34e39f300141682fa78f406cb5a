@@ -1,0 +1,63 @@
+package com.qandxsoft.common.ui.workbench;
+
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+
+import com.qandxsoft.common.ui.workbench.internal.ApplicationRegistry;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: Application.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class AbsApplication implements IApplication {
+	
+	protected String getApplicationTitle() { return ApplicationRegistry.getTitle(); }
+	
+	protected boolean _start(Display display) { return true; }
+	
+	public Object start(IApplicationContext context) {
+		Display display = PlatformUI.createDisplay();
+		//------------------------------------------------------------------------------------------------------------
+		boolean result = _start(display);
+		if(!result) { return IApplication.EXIT_OK; }
+		//------------------------------------------------------------------------------------------------------------
+		try {
+			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
+			if (returnCode == PlatformUI.RETURN_RESTART) {
+				return IApplication.EXIT_RESTART;
+			}
+			return IApplication.EXIT_OK;
+		} finally {
+			display.dispose();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.equinox.app.IApplication#stop()
+	 */
+	public void stop() {
+		if (!PlatformUI.isWorkbenchRunning())
+			return;
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		final Display display = workbench.getDisplay();
+		display.syncExec(new Runnable() {
+			public void run() {
+				if (!display.isDisposed())
+					workbench.close();
+			}
+		});
+	}
+	
+	
+	
+	
+	
+}

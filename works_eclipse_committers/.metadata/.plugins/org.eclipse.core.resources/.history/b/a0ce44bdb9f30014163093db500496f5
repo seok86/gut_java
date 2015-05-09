@@ -1,0 +1,89 @@
+package com.gut.ui.views.plan;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
+
+
+public class LabelProviderImpl extends LabelProvider {
+	
+	@Override
+	public String getText(Object element) {
+		/*if(element instanceof Configuration) {
+			return "Configuration";
+		}
+		else if(element instanceof UpnpComponent) {
+			ExternalProject project = UpnpResourcesPlugin.getWorkspace().getRoot().getProject(((UpnpComponent)element).name);
+			try {
+				Component component = UpnpResourcesNavigator.getComponent(project);
+				return FileUtil.getName(component.getFile());
+			} catch (Exception e) { e.printStackTrace(); }
+			return "(not found.)";
+		}
+		else if(element instanceof Service) {
+			return ((Service)element).name;
+		}
+		else if(element instanceof StateVariable) {
+			return ((StateVariable)element).name;
+		}
+		else if(element instanceof Action) {
+			return ((Action)element).name;
+		}
+		else if(element instanceof OprosPackage) {
+			return ((OprosPackage)element).name;
+		}
+		else if(element instanceof OprosComponent) {
+			ExternalProject project = OprosResourcesPlugin.getWorkspace().getRoot().getProject(((OprosComponent)element).name);
+			try {
+				ComponentProfile component = OprosResourcesNavigator.getComponent(project);
+				return component.name;
+			} catch (Exception e) { e.printStackTrace(); }
+			return "(not found.)";
+		}
+		else if(element instanceof MonitoringVariable) {
+			return ((MonitoringVariable)element).name;
+		}
+		else if(element instanceof ServicePort) {
+			return ((ServicePort)element).name;
+		}
+		else if(element instanceof Method) {
+			return ((Method)element).name;
+		}*/
+		return element.toString();
+	}
+	
+	@Override
+	public Image getImage(Object element) {
+		/*if(element instanceof Configuration) {
+			return ImageCache.get("configuration.png");
+		}
+		else if(element instanceof UpnpComponent) {
+			return ImageCache.get("upnp_small.png");
+		}
+		else if(element instanceof Service) {
+			return ImageCache.get("service.png");
+		}
+		else if(element instanceof StateVariable) {
+			return ImageCache.get("monitoring.png");
+		}
+		else if(element instanceof Action) {
+			return ImageCache.get("action.png");
+		}
+		else if(element instanceof OprosPackage) {
+			return ImageCache.get("package.png");
+		}
+		else if(element instanceof OprosComponent) {
+			return ImageCache.get("opros_small.png");
+		}
+		else if(element instanceof MonitoringVariable) {
+			return ImageCache.get("monitoring.png");
+		}
+		else if(element instanceof ServicePort) {
+			return ImageCache.get("service.gif");
+		}
+		else if(element instanceof Method) {
+			return ImageCache.get("method.gif");
+		}*/
+		//return element.toString();
+		return null;
+	}
+
+}

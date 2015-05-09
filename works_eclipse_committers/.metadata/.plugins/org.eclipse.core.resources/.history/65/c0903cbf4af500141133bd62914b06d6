@@ -1,0 +1,14 @@
+package com.gut.core.runtime.test;
+
+import java.io.File;
+
+import com.gut.core.runtime.GutRuntime;
+
+public class Test {
+	
+	public static void main(String[] args) {
+		File dirGUT = new File("test_gut");
+		GutRuntime.getInst().explore(null, new File("test.gut"), );
+	}
+
+}

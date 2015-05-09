@@ -1,0 +1,86 @@
+package com.bonavision.ui.editors;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+
+import common.ui.PageUtil;
+
+public class EditorUtil {
+	
+	public static void registerEditor(String fileNameOrExtension, String editorId){
+		PlatformUI.getWorkbench().getEditorRegistry().setDefaultEditor(fileNameOrExtension, editorId);
+	}
+	
+	public static boolean focusEditor(IEditorInput input) {
+		try {
+			IWorkbenchPage page = PageUtil.getActivePage();
+			for(IEditorReference ref : page.getEditorReferences()){
+				if(ref.getEditorInput().equals(input)){
+					ref.getEditor(false).setFocus();
+					page.openEditor(input, ref.getId());
+					return true;
+				}
+			}
+		} catch (Exception e) { e.printStackTrace(); }
+		return false;
+	}
+	
+	public static void openEditor(IEditorInput input) {
+		boolean exist = focusEditor(input);
+		if(exist) return;
+		try {
+			IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(input.getName());
+			PageUtil.getActivePage().openEditor(input, desc.getId());
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	public static void openEditor(IEditorInput input, String editorId) {
+		boolean exist = focusEditor(input);
+		if(exist) return;
+		try {
+			PageUtil.getActivePage().openEditor(input, editorId);
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	public static void closeEditor(IEditorPart editor) {
+		PageUtil.getActivePage().closeEditor(editor, false);
+	}
+	
+	public static void closeEditor(IEditorInput input) {
+		try {
+			for(IEditorPart part : getAllEditorParts()) {
+				if(part.getEditorInput().equals(input)) {
+					closeEditor(part);
+				}
+			}
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	public static IEditorPart getEditorPart(IEditorInput input) throws Exception {
+		for(IEditorPart editor : getAllEditorParts()) {
+			if(editor.getEditorInput().equals(input)) return editor;
+		}
+		return null;
+	}
+	
+	public static IEditorPart[] getAllEditorParts() throws Exception {
+		List<IEditorPart> editors = new ArrayList<IEditorPart>();
+		for(IEditorReference ref : PageUtil.getActivePage().getEditorReferences()){
+			editors.add(ref.getEditor(false));
+		}
+		return editors.toArray(new IEditorPart[0]);
+	}
+
+	public static IEditorPart getCurrentEditor() {
+		IWorkbenchPage page = PageUtil.getActivePage();
+		return page.getActiveEditor();
+	}
+
+}

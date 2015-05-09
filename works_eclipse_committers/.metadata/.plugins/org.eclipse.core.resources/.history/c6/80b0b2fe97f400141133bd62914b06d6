@@ -1,0 +1,25 @@
+package com.gut.core.adb;
+
+public class ScreenshotReader {
+	
+	public ScreenshotReader(File fileScreenshot) {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	public void read() {
+		ImageData[] imageData = null;
+		Image image = null;
+            try {
+                // use SWT's ImageLoader to read png from path
+            	imageData = new ImageLoader().load(screenshotFile.getAbsolutePath());
+            } catch (SWTException e) {
+                e.printStackTrace();
+                return false;
+            }
+            // "data" is an array, probably used to handle images that has multiple frames
+            // i.e. gifs or icons, we just care if it has at least one here
+            if (data.length < 1) return false;
+	}
+
+}

@@ -1,0 +1,11 @@
+package com.gut.core.runtime;
+
+public class Element {
+	
+	private boolean clicked = false;
+
+	public boolean isClicked() {
+		return clicked;
+	}
+
+}

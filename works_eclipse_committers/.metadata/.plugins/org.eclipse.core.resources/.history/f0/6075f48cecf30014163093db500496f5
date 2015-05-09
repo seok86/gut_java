@@ -1,0 +1,73 @@
+package com.gut.ui.wizards;
+
+import java.io.ByteArrayInputStream;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbench;
+
+import common.ui.wizards.NewProjectWizard;
+
+public class NewTestProjectWizard extends NewProjectWizard {
+
+	public static final String ID = "com.gut.ui.wizards.NewTestProjectWizard";
+	
+	public class ProjectCreationPage extends NewProjectWizard.ProjectCreationPage {
+		public ProjectCreationPage(String projectType) { super(projectType); }
+		@Override
+		public void createControl(Composite parent) {
+			super.createControl(parent);
+					
+			Composite group = new Composite((Composite)getControl(), SWT.NONE);
+			group.setLayoutData(new GridData(GridData.FILL_BOTH));
+			GridLayout layout = new GridLayout(3, false);
+			layout.marginWidth = 5;
+			group.setLayout(layout);
+			
+			//Button checkOpros = new Button((Composite)group, SWT.CHECK);
+			//checkOpros.setImage(ImageCache.get("opros.png"));
+			//checkOpros.setText("Use OPRoS runtime"); checkOpros.setSelection(true);
+			Label label = new Label(group, SWT.NONE);
+			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+			
+			Text textTargetAPK = new Text(group, SWT.NONE);
+			textTargetAPK.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		}
+	}
+
+	@Override
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		setWindowTitle("New "+getProjectType()+" Project");
+		addPage(fileCreationPage = new ProjectCreationPage(getProjectType()));
+	}
+	
+	@Override
+	protected String getProjectType() {
+		return "Plan";
+	}
+
+	@Override
+	protected void createProject(IProject project) throws Exception {
+		project.create(null);
+		project.open(null);
+		
+		//IProjectDescription desc = project.getDescription();
+		//desc.setNatureIds(new String[]{ PlanNature.ID });
+		//project.setDescription(desc, null);
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes());
+		project.getFile(".target").create(bais, true, null);
+		/*Configuration configuration = createInitModel(project);
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream(XmlUtil.writeObject(configuration));
+		project.getFile(".config").create(bais, true, null);
+		bais.close();*/
+	}
+	
+}

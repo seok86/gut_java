@@ -1,0 +1,51 @@
+package com.gut.ui.wizards;
+
+import java.io.ByteArrayInputStream;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.part.FileEditorInput;
+
+import common.ui.editors.EditorUtil;
+import common.ui.wizards.NewFileWizard;
+
+public class NewTestFileWizard extends NewFileWizard {
+	
+	public static final String ID = "com.gut.ui.wizards.NewTestFileWizard";
+
+	@Override
+	protected String getFileType() {
+		return "Plan";
+	}
+
+	@Override
+	protected String getFileExtension() {
+		return "gut";
+	}
+
+	@Override
+	protected void fillFile(IFile file, IProgressMonitor progressMonitor) throws Exception {
+		/*Plan plan = new Plan();
+		{
+			StartNode node = new StartNode();
+			node.x = 200; node.y = 200;
+			plan.nodes.items.add(node);	
+		}
+		{
+			EndNode node = new EndNode();
+			node.x = 400; node.y = 200;
+			plan.nodes.items.add(node);	
+		}*/
+		byte[] data = new byte[0];//XmlUtil.writeObject(plan);
+		ByteArrayInputStream bais = new ByteArrayInputStream(data);
+		file.create(bais, true, null);
+		file.refreshLocal(IFile.DEPTH_INFINITE, null);
+	}
+
+	@Override
+	protected void openFile(IFile file) {
+		FileEditorInput input = new FileEditorInput(file);
+		EditorUtil.openEditor(input);
+	}
+
+}

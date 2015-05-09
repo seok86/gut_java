@@ -1,0 +1,38 @@
+package com.gut.ui.views.navigator;
+
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+
+public class LabelDecoratorImpl implements ILightweightLabelDecorator {
+
+	@Override
+	public void dispose() { }
+
+	@Override
+	public boolean isLabelProperty(Object element, String property) { return false; }
+	
+	@Override
+	public void addListener(ILabelProviderListener listener) { }
+	@Override
+	public void removeListener(ILabelProviderListener listener) { }
+
+	@Override
+	public void decorate(Object element, IDecoration decoration) {
+		/*if(element instanceof IProject) {
+			IProject project = (IProject)element;
+			try {
+				if(NatureUtil.containsNature(project, PlanNature.ID)) {
+					Configuration configuration = PlanResourcesNavigator.getInstance().getTargetConfiguration();
+					if(configuration != null) {
+						List<PlanGroup> planGroups = configuration.irspRuntime.getPlanGroups();
+						for(PlanGroup planGroup : planGroups) {
+							if(project.getName().equals(planGroup.name)) { decoration.setForegroundColor(ColorCache.blue); }
+						}
+					}
+				}
+			} catch (Exception e) { e.printStackTrace(); }
+		}*/
+	}
+
+}

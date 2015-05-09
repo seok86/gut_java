@@ -1,0 +1,41 @@
+package com.gut.ui.actions;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.FileEditorInput;
+
+import common.ui.cache.ImageCache;
+import common.ui.editors.EditorUtil;
+import common.ui.workbench.toolbar.ToolbarAction;
+
+
+public class ExecuteTestAction extends ToolbarAction {
+	
+	public ExecuteTestAction() { 
+		super("execute");
+		setImageDescriptor(ImageCache.getDescriptor("execute.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText("Execute  ");
+	}
+	
+	@Override
+	public void run() {
+		IEditorPart editorPart = EditorUtil.getCurrentEditor();
+		if(editorPart == null) return;
+		FileEditorInput editorInput = (FileEditorInput) editorPart.getEditorInput();
+		IFile file = editorInput.getFile();
+		
+		// Ready file for inputs
+		
+		
+		// Push Apk
+		
+		// Start Apk
+		
+		// Exploration
+	}
+
+}

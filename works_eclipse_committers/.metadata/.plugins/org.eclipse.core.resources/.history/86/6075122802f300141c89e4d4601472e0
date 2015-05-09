@@ -1,0 +1,11 @@
+package com.gut.core.adb;
+
+public class AndroidDevice {
+	
+	private boolean device;
+	
+	public AndroidDevice() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

@@ -1,0 +1,33 @@
+package com.gut.ui.actions;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+
+public abstract class ToolbarAction extends Action implements IWorkbenchAction {
+	
+	public ToolbarAction(String id) {
+		super();
+		setId(id);
+	}
+
+	private IWorkbenchWindow window;
+	public void setWorkbenchWindow(IWorkbenchWindow window){
+		this.window = window;
+		window.getWorkbench().addWindowListener(new IWindowListener() {
+			@Override public void windowOpened(IWorkbenchWindow window) { init(); }
+			@Override public void windowDeactivated(IWorkbenchWindow window) { }
+			@Override public void windowClosed(IWorkbenchWindow window) { }
+			@Override public void windowActivated(IWorkbenchWindow window) { }
+		});
+	}
+	public IWorkbenchWindow getWorkbenchWindow(){ return this.window; }
+	
+	protected abstract void init();
+	
+	@Override
+	public void dispose() { }
+	
+}

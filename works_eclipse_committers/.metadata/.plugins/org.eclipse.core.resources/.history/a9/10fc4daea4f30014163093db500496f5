@@ -1,0 +1,86 @@
+package com.gut.ui;
+
+import java.io.File;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
+
+public class ImageCache {
+	
+	private static ImageRegistry registry = new ImageRegistry();
+	//-------------------------------------------------------------------------------------------------------
+	public static interface ImageDescriptorProvider { 
+		ImageDescriptor get();
+	}
+	private static Image _get(String key, ImageDescriptorProvider provider) {
+		Image image = registry.get(key);
+		if(image == null) {
+			registry.put(key, provider.get());
+			image = registry.get(key);
+		}
+		return image;
+	}
+	private static ImageDescriptor _getDescriptor(String key, ImageDescriptorProvider provider) {
+		ImageDescriptor imageDescriptor = registry.getDescriptor(key);
+		if(imageDescriptor == null) {
+			registry.put(key, provider.get());
+			imageDescriptor = registry.getDescriptor(key);
+		}
+		return imageDescriptor;
+	}
+	//-------------------------------------------------------------------------------------------------------
+	// From File
+	public static Image get(final File file) {
+		return _get("file:"+file.getName()+":"+file.lastModified(), new ImageDescriptorProvider() {
+			@Override
+			public ImageDescriptor get() {
+				return ImageDescriptorFactory.create(file);
+			}
+		});
+	}
+	public static ImageDescriptor getDescriptor(final File file) {
+		return _getDescriptor("file:"+file.getName()+":"+file.lastModified(), new ImageDescriptorProvider() {
+			@Override
+			public ImageDescriptor get() {
+				return ImageDescriptorFactory.create(file);
+			}
+		});
+	}
+	
+	public static Image get(final String path) {
+		return get(new File(path));
+	}
+	public static ImageDescriptor getDescriptor(final String path) {
+		return getDescriptor(new File(path));
+	}
+	//-------------------------------------------------------------------------------------------------------
+	// From byte[]
+	public static Image get(final byte[] bytes) {
+		return _get("byte[]:"+new String(bytes), new ImageDescriptorProvider() {
+			@Override
+			public ImageDescriptor get() {
+				return ImageDescriptorFactory.create(bytes);
+			}
+		});
+	}
+	public static ImageDescriptor getDescriptor(final byte[] bytes) {
+		return _getDescriptor("byte[]:"+new String(bytes), new ImageDescriptorProvider() {
+			@Override
+			public ImageDescriptor get() {
+				return ImageDescriptorFactory.create(bytes);
+			}
+		});
+	}
+	//-------------------------------------------------------------------------------------------------------
+	// From ImageDescriptor
+	public static Image toImage(final ImageDescriptor desc) {
+		return _get("imgDesc:"+new String(desc.getImageData().data), new ImageDescriptorProvider() {
+			@Override
+			public ImageDescriptor get() {
+				return desc;
+			}
+		});
+	}
+	//-------------------------------------------------------------------------------------------------------
+}

@@ -1,0 +1,37 @@
+package com.gut.ui;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.net.MalformedURLException;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+
+public class ImageDescriptorFactory {
+	
+	public static ImageDescriptor create(File file) {
+		try {
+			return ImageDescriptor.createFromURL(file.toURI().toURL());
+		} catch (MalformedURLException e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	public static ImageDescriptor create(byte[] data) {
+		ImageLoader loader = new ImageLoader();
+		final ImageData[] imageData = loader.load(new ByteArrayInputStream(data));
+		return new ImageDescriptor() {
+			@Override 
+			public ImageData getImageData() { return imageData[0]; }
+		};
+	}
+
+	public static ImageDescriptor create(final Image image) {
+		return new ImageDescriptor() {
+			@Override
+			public ImageData getImageData() { return image.getImageData(); }
+		};
+	}
+
+}

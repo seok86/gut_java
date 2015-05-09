@@ -1,0 +1,367 @@
+package com.qandxsoft.common.ui.workbench;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.actions.ContributionItemFactory;
+import org.eclipse.ui.application.ActionBarAdvisor;
+import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.ide.IDEActionFactory;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
+import org.eclipse.ui.internal.WorkbenchMessages;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.handlers.IActionCommandMappingService;
+import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.eclipse.ui.internal.registry.ActionSetRegistry;
+import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: ApplicationActionBarAdvisor.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public abstract class ApplicationActionBarAdvisor extends ActionBarAdvisor {
+	
+	private IWorkbenchAction closeAction;
+	private IWorkbenchAction closeAllAction;
+	private IWorkbenchAction closeOthersAction;
+	private IWorkbenchAction closeAllSavedAction;
+
+	private IWorkbenchAction saveAction;
+	private IWorkbenchAction saveAsAction;
+	private IWorkbenchAction saveAllAction;
+
+	private IWorkbenchAction newWindowAction;
+	private IWorkbenchAction newEditorAction;
+
+	private IWorkbenchAction helpContentsAction;
+	private IWorkbenchAction helpSearchAction;
+	private IWorkbenchAction aboutAction;
+	
+	private IWorkbenchAction cutAction;
+	private IWorkbenchAction copyAction;
+	private IWorkbenchAction pasteAction;
+
+	private IWorkbenchAction undoAction;
+	private IWorkbenchAction redoAction;
+	private IWorkbenchAction quitAction;
+	
+	private IWorkbenchAction openWorkspaceAction;
+
+	private IWorkbenchAction toggleAutoBuildAction;
+	
+	// -------------------------------------------------
+	/*private IWorkbenchAction newPlanProjectAction;
+	private IWorkbenchAction newPlanFileAction;
+
+	private IWorkbenchAction executeAction;
+	private IWorkbenchAction stopAction;
+	private IWorkbenchAction refreshAction;
+	
+	private IWorkbenchAction toggleGridAction;*/
+	
+	private IWorkbenchWindow window;
+	
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+		super(configurer);
+	}
+	
+	protected List<String> getDisabledActionSets(){
+		List<String> list = new ArrayList<String>();
+		list.add("org.eclipse.search.searchActionSet");
+		list.add("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
+		list.add("org.eclipse.ui.edit.text.actionSet.navigation");
+		list.add("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
+		list.add("org.eclipse.debug.ui.debugActionSet");
+		list.add("org.eclipse.debug.ui.launchActionSet");
+		list.add("org.eclipse.team.ui.actionSet");
+		return list;
+	}
+	
+	@Override
+	protected void makeActions(IWorkbenchWindow window) {
+		this.window = window;
+		
+		ActionSetRegistry registry = WorkbenchPlugin.getDefault().getActionSetRegistry();
+		for(String disableId : getDisabledActionSets()){
+			IActionSetDescriptor descriptor = registry.findActionSet(disableId);
+			if(descriptor != null) descriptor.setInitiallyVisible(false);
+		}
+		
+		//statusLineItem = new StatusLineContributionItem("ModeContributionItem"); //$NON-NLS-1$
+
+        saveAction = ActionFactory.SAVE.create(window);
+        register(saveAction);
+        saveAsAction = ActionFactory.SAVE_AS.create(window);
+        register(saveAsAction);
+        saveAllAction = ActionFactory.SAVE_ALL.create(window);
+        register(saveAllAction);
+		
+        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
+        newWindowAction.setText(IDEWorkbenchMessages.Workbench_openNewWindow);
+        register(newWindowAction);
+		newEditorAction = ActionFactory.NEW_EDITOR.create(window);
+		register(newEditorAction);
+		
+		cutAction = ActionFactory.CUT.create(window);
+		register(cutAction);
+		copyAction = ActionFactory.COPY.create(window);
+		register(copyAction);
+		pasteAction = ActionFactory.PASTE.create(window);
+		register(pasteAction);
+        undoAction = ActionFactory.UNDO.create(window);
+        register(undoAction);
+        redoAction = ActionFactory.REDO.create(window);
+        register(redoAction);
+
+        closeAction = ActionFactory.CLOSE.create(window);
+        register(closeAction);
+        closeAllAction = ActionFactory.CLOSE_ALL.create(window);
+        register(closeAllAction);
+        closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
+        register(closeOthersAction);
+        //closeAllSavedAction = ActionFactory.CLOSE_ALL_SAVED.create(window);
+        //register(closeAllSavedAction);
+
+        helpContentsAction = ActionFactory.HELP_CONTENTS.create(window);
+        register(helpContentsAction);
+        helpSearchAction = ActionFactory.HELP_SEARCH.create(window);
+        register(helpSearchAction);
+        //dynamicHelpAction = ActionFactory.DYNAMIC_HELP.create(window);
+        //register(dynamicHelpAction);
+        aboutAction = ActionFactory.ABOUT.create(window);
+        aboutAction.setImageDescriptor(IDEInternalWorkbenchImages.getImageDescriptor(IDEInternalWorkbenchImages.IMG_OBJS_DEFAULT_PROD));
+        register(aboutAction);
+        //openPreferencesAction = ActionFactory.PREFERENCES.create(window);
+        //register(openPreferencesAction);
+
+        quitAction = ActionFactory.QUIT.create(window);
+        register(quitAction);
+        
+        openWorkspaceAction = IDEActionFactory.OPEN_WORKSPACE.create(window);
+        register(openWorkspaceAction);
+        
+        toggleAutoBuildAction = IDEActionFactory.BUILD_AUTOMATICALLY.create(window);
+        register(toggleAutoBuildAction);
+        toggleAutoBuildAction.run();
+		
+        //--------------------------------------------------------------
+        /*newPlanProjectAction = new NewPlanProjectAction(window);
+        newPlanFileAction = new NewPlanFileAction(window);
+        
+        executeAction = new ExecuteAction(window);
+        stopAction = new StopAction(window);
+        refreshAction = new RefreshAction(window);
+        
+        toggleGridAction = new ToggleGridAction(window);*/
+	}
+	
+	// Menu ----------------------------------------------------------------------------------------------------------------------------------------
+	
+	@Override
+	protected void fillMenuBar(IMenuManager menuBar) {
+		menuBar.add(createFileMenu());
+		menuBar.add(createEditMenu());
+		//menuBar.add(createNavigateMenu());
+		menuBar.add(createProjectMenu());
+        
+		menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		//menuBar.add(createWindowMenu());
+		menuBar.add(createHelpMenu());
+	}
+	
+	private MenuManager createFileMenu() {
+        MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_file, IWorkbenchActionConstants.M_FILE);
+        menu.add(new GroupMarker(IWorkbenchActionConstants.FILE_START));
+        /*{
+            // create the New submenu, using the same id for it as the New action
+            String newText = IDEWorkbenchMessages.Workbench_new;
+            String newId = ActionFactory.NEW.getId();
+            MenuManager newMenu = new MenuManager(newText, newId);
+            newMenu.setActionDefinitionId("org.eclipse.ui.file.newQuickMenu"); //$NON-NLS-1$
+            newMenu.add(new Separator(newId));
+            NewWizardMenu newWizardMenu = new NewWizardMenu(window); // TODO:
+            newMenu.add(newWizardMenu);
+            newMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+            menu.add(newMenu);
+        }*/
+		
+        menu.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
+        menu.add(new Separator());
+
+        menu.add(closeAction);
+        menu.add(closeAllAction);
+        //menu.add(closeAllSavedAction);
+        menu.add(new GroupMarker(IWorkbenchActionConstants.CLOSE_EXT));
+        menu.add(new Separator());
+        menu.add(saveAction);
+        menu.add(saveAsAction);
+        menu.add(saveAllAction);
+        menu.add(new Separator());
+        menu.add(getMoveItem());
+        menu.add(getRenameItem());
+        menu.add(getRefreshItem());
+
+        menu.add(new GroupMarker(IWorkbenchActionConstants.SAVE_EXT));
+        menu.add(new Separator());
+        menu.add(getPrintItem());
+        menu.add(new GroupMarker(IWorkbenchActionConstants.PRINT_EXT));
+        menu.add(new Separator());
+        menu.add(openWorkspaceAction);
+        menu.add(new GroupMarker(IWorkbenchActionConstants.OPEN_EXT));
+
+        menu.add(ContributionItemFactory.REOPEN_EDITORS.create(window));
+        menu.add(new GroupMarker(IWorkbenchActionConstants.MRU));
+        menu.add(new Separator());
+        
+		ActionContributionItem quitItem = new ActionContributionItem(quitAction);
+		menu.add(quitItem);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.FILE_END));
+		return menu;
+    }
+	
+	private MenuManager createEditMenu() {
+        MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_edit, IWorkbenchActionConstants.M_EDIT);
+        menu.add(new GroupMarker(IWorkbenchActionConstants.EDIT_START));
+
+        menu.add(undoAction);
+        menu.add(redoAction);
+        menu.add(new GroupMarker(IWorkbenchActionConstants.UNDO_EXT));
+        menu.add(new Separator());
+
+        menu.add(getCutItem());
+        menu.add(getCopyItem());
+        menu.add(getPasteItem());
+        menu.add(new GroupMarker(IWorkbenchActionConstants.CUT_EXT));
+        menu.add(new Separator());
+
+        menu.add(getDeleteItem());
+        menu.add(getSelectAllItem());
+        menu.add(new Separator());
+
+        menu.add(getFindItem());
+        menu.add(new GroupMarker(IWorkbenchActionConstants.FIND_EXT));
+        menu.add(new Separator());
+
+        menu.add(new GroupMarker(IWorkbenchActionConstants.ADD_EXT));
+
+        menu.add(new GroupMarker(IWorkbenchActionConstants.EDIT_END));
+        menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        return menu;
+    }
+	
+	private MenuManager createProjectMenu() {
+        MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_project, IWorkbenchActionConstants.M_PROJECT);
+        menu.add(toggleAutoBuildAction);
+        return menu;
+    }
+	
+	private MenuManager createHelpMenu() {
+        MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_help, IWorkbenchActionConstants.M_HELP);
+        menu.add(new Separator());
+        menu.add(new Action("About iRSP"){ });
+        return menu;
+	}
+    
+    private IContributionItem getCutItem() {
+		return getItem(ActionFactory.CUT.getId(), ActionFactory.CUT.getCommandId(), ISharedImages.IMG_TOOL_CUT, ISharedImages.IMG_TOOL_CUT_DISABLED, WorkbenchMessages.Workbench_cut, WorkbenchMessages.Workbench_cutToolTip, null);
+	}
+    
+    private IContributionItem getCopyItem() {
+		return getItem(ActionFactory.COPY.getId(), ActionFactory.COPY.getCommandId(), ISharedImages.IMG_TOOL_COPY, ISharedImages.IMG_TOOL_COPY_DISABLED, WorkbenchMessages.Workbench_copy, WorkbenchMessages.Workbench_copyToolTip, null);
+	}
+    
+    private IContributionItem getPasteItem() {
+		return getItem(ActionFactory.PASTE.getId(), ActionFactory.PASTE.getCommandId(), ISharedImages.IMG_TOOL_PASTE, ISharedImages.IMG_TOOL_PASTE_DISABLED, WorkbenchMessages.Workbench_paste, WorkbenchMessages.Workbench_pasteToolTip, null);
+	}
+    
+    private IContributionItem getPrintItem() {
+		return getItem(ActionFactory.PRINT.getId(), ActionFactory.PRINT.getCommandId(), ISharedImages.IMG_ETOOL_PRINT_EDIT, ISharedImages.IMG_ETOOL_PRINT_EDIT_DISABLED, WorkbenchMessages.Workbench_print, WorkbenchMessages.Workbench_printToolTip, null);
+	}
+    
+    private IContributionItem getSelectAllItem() {
+		return getItem(ActionFactory.SELECT_ALL.getId(), ActionFactory.SELECT_ALL.getCommandId(), null, null, WorkbenchMessages.Workbench_selectAll, WorkbenchMessages.Workbench_selectAllToolTip, null);
+	}
+    
+    private IContributionItem getFindItem() {
+		return getItem(ActionFactory.FIND.getId(), ActionFactory.FIND.getCommandId(), null, null, WorkbenchMessages.Workbench_findReplace, WorkbenchMessages.Workbench_findReplaceToolTip, null);
+	}
+
+    private IContributionItem getDeleteItem() {
+        return getItem(ActionFactory.DELETE.getId(), ActionFactory.DELETE.getCommandId(), ISharedImages.IMG_TOOL_DELETE, ISharedImages.IMG_TOOL_DELETE_DISABLED, WorkbenchMessages.Workbench_delete, WorkbenchMessages.Workbench_deleteToolTip, IWorkbenchHelpContextIds.DELETE_RETARGET_ACTION);
+    }
+    
+    private IContributionItem getRefreshItem() {
+		return getItem(ActionFactory.REFRESH.getId(), ActionFactory.REFRESH.getCommandId(), null, null, WorkbenchMessages.Workbench_refresh, WorkbenchMessages.Workbench_refreshToolTip, null);
+	}
+    
+    private IContributionItem getMoveItem() {
+		return getItem(ActionFactory.MOVE.getId(), ActionFactory.MOVE.getCommandId(), null, null, WorkbenchMessages.Workbench_move, WorkbenchMessages.Workbench_moveToolTip, null);
+	}
+    
+    private IContributionItem getRenameItem() {
+		return getItem(ActionFactory.RENAME.getId(), ActionFactory.RENAME.getCommandId(), null, null, WorkbenchMessages.Workbench_rename, WorkbenchMessages.Workbench_renameToolTip, null);
+	}
+    
+    private IContributionItem getItem(String actionId, String commandId, String image, String disabledImage, String label, String tooltip, String helpContextId) {
+		ISharedImages sharedImages = window.getWorkbench().getSharedImages();
+
+		IActionCommandMappingService acms = (IActionCommandMappingService) window.getService(IActionCommandMappingService.class);
+		acms.map(actionId, commandId);
+
+		CommandContributionItemParameter commandParm = new CommandContributionItemParameter(window, actionId, commandId, null, sharedImages.getImageDescriptor(image), sharedImages.getImageDescriptor(disabledImage), null, label, null, tooltip, CommandContributionItem.STYLE_PUSH, null, false);
+		return new CommandContributionItem(commandParm);
+	}
+    
+    //-----------------------------------------------------------------------------------------------------------------------------
+	
+	public ActionContributionItem addActionItem(IToolBarManager toolBar, IAction action) {
+		ActionContributionItem actionCI = new ActionContributionItem(action);
+		actionCI.setMode(ActionContributionItem.MODE_FORCE_TEXT);
+		toolBar.add(actionCI);
+		return actionCI;
+	}
+	
+	public ControlContribution addControlItem(IToolBarManager toolBar, ControlContribution combo) {
+		toolBar.add(combo);
+		return combo;
+	}
+	
+	public class DummyControlContribution extends ControlContribution {
+		public DummyControlContribution() { super("dummy"); }
+		@Override
+		protected Control createControl(final Composite parent) {
+			parent.setLayout(null);
+			Composite composite = new Composite(parent, SWT.NONE);
+			return composite;
+		}
+		@Override
+		protected int computeWidth(Control control) { return 100; }
+	}
+	
+}

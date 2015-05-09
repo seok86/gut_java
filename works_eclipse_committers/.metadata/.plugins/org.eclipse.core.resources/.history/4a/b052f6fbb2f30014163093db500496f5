@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="common.ui.workbench.application" name="Application" schema="schema/common.ui.workbench.application.exsd"/>
+   <extension-point id="common.ui.workbench.viewLayouts" name="View Layouts" schema="schema/common.ui.workbench.viewLayouts.exsd"/>
+   <extension-point id="common.ui.workbench.toolbarItems" name="Toolbar Items" schema="schema/common.ui.workbench.toolbarItems.exsd"/>
+<extension
+     point="org.eclipse.ui.activities">
+  <activity
+        id="com.bonavision.ui.workbench.activity.disabled"
+        name="Disabled Activity">
+     <enabledWhen>
+        <with
+              variable="selection">
+           <count
+                 value="-1">
+           </count>
+        </with>
+     </enabledWhen>
+  </activity>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        pattern="org\.eclipse\.m2e\..*">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        pattern="org\.eclipse\.search\..*">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        pattern="org\.eclipse\.team\..*">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        pattern="org\.eclipse\.compare.*">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        pattern="org\.eclipse\.help\.ui\.PrefPageHelp.*">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        isEqualityPattern="true"
+        pattern="org.eclipse.ui.ide/org.eclipse.ui.preferencePages.Workspace">
+  </activityPatternBinding>
+  <activityPatternBinding
+        activityId="com.bonavision.ui.workbench.activity.disabled"
+        isEqualityPattern="true"
+        pattern="org.eclipse.ui.ide/org.eclipse.ui.preferencePages.Perspectives">
+  </activityPatternBinding>
+</extension>
+
+	<extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="common.ui.workbench.ApplicationImpl">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="common.ui.workbench.ApplicationPerspective"
+            id="common.ui.workbench.ApplicationPerspective"
+            name="Main">
+      </perspective>
+   </extension>
+   
+</plugin>

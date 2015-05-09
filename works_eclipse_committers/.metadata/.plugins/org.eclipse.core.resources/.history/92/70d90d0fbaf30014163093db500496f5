@@ -1,0 +1,16 @@
+package com.gut.ui.views.project.actions;
+
+import org.eclipse.jface.action.Action;
+
+public class NewTestProjectAction extends Action {
+	
+	public NewTestProjectAction() {
+		super("New Test Project", null);
+	}
+	
+	@Override
+	public void run() {
+		//WizardUtil.openNewWizard(NewPlanProjectWizard.ID);
+	}
+	
+}

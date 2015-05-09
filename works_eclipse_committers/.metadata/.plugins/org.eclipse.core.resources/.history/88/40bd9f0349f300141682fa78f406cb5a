@@ -1,0 +1,15 @@
+package com.bonavision.irsp.ui.views.plan.actions;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.ui.navigator.CommonViewer;
+
+public class AbsAction extends Action {
+	
+	protected CommonViewer viewer;
+	
+	public AbsAction(CommonViewer viewer, String text) {
+		super(text);
+		this.viewer = viewer;
+	}
+
+}

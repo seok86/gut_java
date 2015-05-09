@@ -1,0 +1,9 @@
+package com.gut.core.adb;
+
+public class AndroidDevice {
+	
+	public AndroidDevice() {
+		
+	}
+
+}

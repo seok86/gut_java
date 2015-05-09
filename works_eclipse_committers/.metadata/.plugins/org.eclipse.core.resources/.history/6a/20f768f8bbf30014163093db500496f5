@@ -1,0 +1,26 @@
+package com.gut.ui.actions;
+
+import com.gut.ui.wizards.NewTestProjectWizard;
+import common.ui.cache.ImageCache;
+import common.ui.wizards.WizardUtil;
+import common.ui.workbench.toolbar.ToolbarAction;
+
+
+public class NewTestFileAction extends ToolbarAction {
+	
+	public NewTestFileAction() { 
+		super("new_file");
+		setImageDescriptor(ImageCache.getDescriptor("new_project.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText("New Project");
+	}
+	
+	@Override
+	public void run() {
+		WizardUtil.openNewWizard(NewTestProjectWizard.ID);
+	}
+
+}

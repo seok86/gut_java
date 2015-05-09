@@ -1,0 +1,5 @@
+package com.gut.ui.editors;
+
+public class ContentProviderImpl {
+
+}

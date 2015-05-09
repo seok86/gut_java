@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="com.gut.ui.View"
+            id="com.gut.ui.view">
+      </view>
+   </extension>
+   <extension
+         point="common.ui.cache.providers">
+      <imageProvider
+            folder="icons/">
+      </imageProvider>
+   </extension>
+   <extension
+         point="common.ui.workbench.application">
+      <application
+            title="GUT"></application>
+   </extension>
+   <extension
+         point="common.ui.workbench.toolbarItems">
+      <toolbarAction
+            class="com.gut.ui.actions.NewProjectAction"></toolbarAction>
+   </extension>
+
+</plugin>

@@ -1,0 +1,15 @@
+package com.gut.core.runtime;
+
+public class Element {
+	
+	private boolean clicked = false;
+	
+	public void setClicked(boolean clicked) {
+		this.clicked = clicked;
+	}
+
+	public boolean isClicked() {
+		return clicked;
+	}
+
+}

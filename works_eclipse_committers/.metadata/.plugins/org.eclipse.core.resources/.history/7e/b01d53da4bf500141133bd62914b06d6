@@ -1,0 +1,96 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gut.core.adb.ADB;
+
+public class Explorer {
+		
+	private ADB adb;
+	private File dirWork;
+	private Listener listener;
+	
+	public Explorer(String device, File fileInput, File dirWork) throws IOException {
+		this.adb = new ADB(device);
+		this.dirWork = dirWork;
+	}
+	
+	public interface Listener {
+		void screenCaptured(Screen screen);
+	}
+	public void setListener(Listener listener) { this.listener = listener; }
+	private void notifyScreenCaptured(Screen screen) { if(listener != null) listener.screenCaptured(screen); }
+	
+	public Screen explore() throws IOException {
+		Screen rootScreen = null;
+		
+		List<Screen> screens = new ArrayList<Screen>();
+		Screen oldScreen = null;
+		
+		// first
+		rootScreen = new Screen(dirWork, screens.size());
+		_screenshot(rootScreen);
+		screens.add(rootScreen);
+		
+		notifyScreenCaptured(rootScreen);
+		
+		oldScreen = rootScreen;
+		
+		// repeat
+		int cntForDebug = 20;
+		while(true) {
+			if(cntForDebug == 0) break;
+			cntForDebug--;
+			
+			List<Element> elements = oldScreen.getElements(false); // not yet clicked (false) elements
+			if(elements.size() == 0) { break; } // exit condition
+			
+			Element element = elements.get(0); // (select first) 
+			_click(element); // click(adb)
+			element.setClicked(true);
+			try { Thread.sleep(300); } catch (InterruptedException e) { e.printStackTrace(); } // sleep for transition
+			
+			Screen screen = new Screen(dirWork, screens.size());
+			_screenshot(screen); // screenshot(adb) & parse
+			if(screens.contains(screen)) { screen.dispose(); }
+			else { screens.add(screen); }
+						
+			element.linkScreen(screen);
+			
+			notifyScreenCaptured(screen);
+
+			oldScreen = screen;
+		}
+		
+		return rootScreen;
+	}
+	
+	private Screen _screenshot(Screen screen) throws IOException {
+		
+		adb.deleteScreenshot();
+		adb.createScreenshot();
+		adb.pullScreenshot(screen.filePNG);
+		
+		adb.deleteUiDump();
+		adb.createUiDump();
+		adb.pullUiDump(screen.fileXML);
+		
+		screen.parse();
+		
+		return screen;
+	}
+	
+	private void _click(Element element) throws IOException {
+		if(element.getId().equals("net.yutar.ysapp:id/auth_id_edit")) return;
+		System.out.println("_click(): "+element.getId());
+		
+		int cx = element.getCenterX();
+		int cy = element.getCenterY();
+		
+		adb.touch(cx, cy);
+	}
+	
+}

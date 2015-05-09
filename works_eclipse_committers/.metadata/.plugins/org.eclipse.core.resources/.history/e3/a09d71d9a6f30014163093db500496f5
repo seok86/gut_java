@@ -1,0 +1,101 @@
+package com.qandxsoft.common.ui.workbench;
+
+import java.io.File;
+
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimElement;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.application.ActionBarAdvisor;
+import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.WorkbenchWindow;
+
+import common.ui.workbench.internal.ApplicationRegistry;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: ApplicationWorkbenchWindowAdvisor.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
+
+	public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+		super(configurer);
+	}
+	
+	@Override
+	public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
+		return new ApplicationActionBarAdvisorImpl(configurer);
+	}
+	
+	public void preWindowOpen() {
+		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+		configurer.setInitialSize(new Point(700, 550));
+		configurer.setShowMenuBar(true);
+		configurer.setShowCoolBar(true);
+		configurer.setShowStatusLine(false);
+		configurer.setTitle(ApplicationRegistry.getTitle()+" - "+ApplicationRegistry.getSubTitle());
+
+		PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
+			@Override
+			public void windowOpened(IWorkbenchWindow window) {
+				if (window instanceof WorkbenchWindow) {
+					MTrimBar topTrim = ((WorkbenchWindow) window).getTopTrim();
+					for (MTrimElement element : topTrim.getChildren()) {
+						if (element.getElementId() != null && (
+										"SearchField".equals(element.getElementId()) || 
+										"PerspectiveSpacer".equals(element.getElementId()) || 
+										"Spacer Glue".equals(element.getElementId()))) {
+							element.setVisible(false);
+							element.setToBeRendered(false);
+						}
+					}
+					((WorkbenchWindow) window).getToolBarManager().update(true);
+				}
+			}
+			@Override
+			public void windowDeactivated(IWorkbenchWindow window) { }
+			@Override
+			public void windowClosed(IWorkbenchWindow window) { }
+			@Override
+			public void windowActivated(IWorkbenchWindow window) { }
+		});
+
+		/*ConsoleViewManager.INSTANCE.init();
+		
+		EditorHighlightManager.INSTANCE.init();
+
+		Thread thread = new Thread(){
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1000*10);
+				} catch (InterruptedException e) { e.printStackTrace(); }
+				EditErrorCheckingManager.INSTANCE.startChecking();
+			}
+		};
+		thread.start();
+		*/
+	}
+	
+	
+	@Override
+	public boolean preWindowShellClose() {
+		IPath workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		IPath filePath = workspacePath.append(".metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi");
+		File file = filePath.toFile();
+		file.deleteOnExit();
+		return super.preWindowShellClose();
+	}
+	
+}

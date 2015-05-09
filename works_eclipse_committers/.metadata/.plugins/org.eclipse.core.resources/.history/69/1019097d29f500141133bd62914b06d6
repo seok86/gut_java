@@ -1,0 +1,25 @@
+package com.gut.core.runtime;
+
+public class Element {
+	
+	private Screen parent;
+	
+	private boolean clicked = false;
+	
+	public Element(Screen parent) {
+		this.parent = parent;
+	}
+	
+	public void setClicked(boolean clicked) {
+		this.clicked = clicked;
+	}
+	public boolean isClicked() {
+		return clicked;
+	}
+
+	public void link(Screen screen) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

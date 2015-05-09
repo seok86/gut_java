@@ -1,0 +1,16 @@
+package com.gut.core.adb;
+
+public class AndroidSDK {
+	
+	private static ADB instADB = null;
+	public static ADB getADB() {
+		if(instADB == null) instADB = new ADB();
+		return instADB;
+	}
+	
+	private static Android instAndroid = null;
+	public static Android getAndroid() {
+		if(instAndroid == null) instAndroid = new Android();
+	}
+
+}

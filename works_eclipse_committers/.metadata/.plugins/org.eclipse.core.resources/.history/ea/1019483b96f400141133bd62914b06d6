@@ -1,0 +1,28 @@
+package com.gut.core.adb;
+
+import java.io.File;
+
+public class UiDumpReader {
+
+	private File fileUiDump;
+
+	public UiDumpReader(File fileUiDump) {
+		this.fileUiDump = fileUiDump;
+	}
+
+	public void read() {
+		Node rootNode = new UiHierarchyXmlLoader().parseXml(xmlDumpFile.getAbsolutePath());
+		if (rootNode == null) {
+			System.err.println("null rootnode after parsing.");
+			return false;
+		}
+		
+		if (mRootNode != null) {
+			mRootNode.clearAllChildren();
+		}
+		
+
+		
+	}
+
+}

@@ -1,0 +1,165 @@
+package com.qandxsoft.common.file;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
+/**
+ * 
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: FileUtil.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class FileUtil {
+	
+	public static String NOEXT(String name){
+		int index = name.lastIndexOf(".");
+		if(index == -1) return name;
+		return name.substring(0, index);
+	}
+
+	public static File findFile(File folder, String path) {
+		return _findFile(folder, folder, path);
+	}
+	
+	private static File _findFile(File root, File folder, String path) {
+		for(File f : folder.listFiles()){
+			if(f.isDirectory()){
+				File result = _findFile(root, f, path);
+				if(result != null) return result;
+			}
+			else if(f.isFile()){
+				if(f.getAbsolutePath().replace(root.getAbsolutePath()+File.separator, "").equals(path)){
+					return f;
+				}
+			}
+		}
+		return null;
+	}
+	//---------------------------------------------------------------------------------------------------
+	public static String[] listRecursively(File folder, String ext){
+		return _listRecursively(folder, folder, ext).toArray(new String[0]);
+	}
+	
+	private static List<String> _listRecursively(File root, File folder, String ext) {
+		List<String> list = new ArrayList<String>();
+		for(File f : folder.listFiles()){
+			if(f.isDirectory()){
+				list.addAll(_listRecursively(root, f, ext));
+			}
+			else if(f.isFile()){
+				if(ext == null || f.getName().endsWith("."+ext)){
+					list.add(FileUtil.getRelativePath(root, f));
+				}
+			}
+		}
+		return list;
+	}
+	//---------------------------------------------------------------------------------------------------
+	public static File[] listFiles(File folder, String ext) {
+		List<File> list = new ArrayList<File>();
+		for(File f : folder.listFiles()) {
+			if(f.isFile()) {
+				if(ext == null || ext.equals("*") || f.getName().endsWith("."+ext)) {
+					list.add(f);
+				}
+			}
+		}
+		return list.toArray(new File[0]);
+	}
+	
+	public static File[] listFilesRecursively(File folder, String ext) {
+		return _listFilesRecursively(folder, folder, ext).toArray(new File[0]);
+	}
+	
+	private static List<File> _listFilesRecursively(File root, File folder, String ext) {
+		List<File> list = new ArrayList<File>();
+		for(File f : folder.listFiles()) {
+			if(f.isDirectory()) {
+				list.addAll(_listFilesRecursively(root, f, ext));
+			}
+			else if(f.isFile()) {
+				if(ext == null || ext.equals("*") || f.getName().endsWith("."+ext)){
+					list.add(f);
+				}
+			}
+		}
+		return list;
+	}
+	//------------------------------------------------------------------------------------------------------
+	public static void copyFile(File file, File location){
+		copyFile(file, location, file.getName());
+	}
+	
+	public static void copyFile(File file, File location, String name){
+		File file2 = new File(location, name);
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			FileChannel src = fis.getChannel();
+			FileOutputStream fos = new FileOutputStream(file2);
+			FileChannel dest = fos.getChannel();
+			dest.transferFrom(src, 0, src.size());
+			fis.close();
+			fos.close();
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	//------------------------------------------------------------------------------------------------------
+	public static void deleteFile(File file){
+		if(file.isFile()){
+			file.delete();
+		}
+	}
+	
+	public static void deleteFolder(File folder, boolean included) {
+		if(folder == null || folder.isFile() || folder.listFiles() == null) return;
+		for(File f : folder.listFiles()){
+			if(f.isDirectory()){
+				deleteFolder(f, true);
+			}
+			else if(f.isFile()){
+				f.delete();
+			}
+		}
+		if(included){
+			folder.delete();
+		}
+	}
+	//------------------------------------------------------------------------------------------------------
+	public static byte[] toByteArray(File file) throws Exception {
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[(int)file.length()];
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		bis.read(buffer, 0, buffer.length);
+		bis.close();
+		fis.close();
+		return buffer;
+	}
+	
+	public static void toFile(byte[] data, File file) throws Exception {
+		FileOutputStream fos = new FileOutputStream(file);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		bos.write(data);
+		bos.flush(); bos.close();
+		fos.flush(); fos.close();
+	}
+	//------------------------------------------------------------------------------------------------------
+
+	public static String getRelativePath(File folder, File file) {
+		return (file.getPath().replace(File.separator, "/")).replace((folder.getPath().replace(File.separator, "/"))+"/", "");
+	}
+
+	public static String getExtension(String fileName) {
+		int index = fileName.lastIndexOf('.');
+		String extension = fileName.substring(index+1);
+		return extension;
+	}
+	
+}

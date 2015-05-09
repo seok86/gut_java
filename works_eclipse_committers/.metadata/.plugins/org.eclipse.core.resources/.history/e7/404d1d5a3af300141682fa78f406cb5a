@@ -1,0 +1,11 @@
+package com.gut.ui.actions;
+
+public class SampleAction extends ToolbarAction {
+
+	@Override
+	protected void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

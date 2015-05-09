@@ -1,0 +1,9 @@
+package com.gut.ui.wizards.plan;
+
+import common.ui.wizards.NewFolderWizard;
+
+public class NewPlanFolderWizard extends NewFolderWizard {
+	
+	public static final String ID = "com.bonavision.irsp.ui.wizards.plan.NewPlanFolderWizard";
+
+}

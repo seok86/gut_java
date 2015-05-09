@@ -1,0 +1,27 @@
+package com.gut.core.adb.internal;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gut.core.adb.ProcessRunner;
+
+public class AdbRunner extends ProcessRunner {
+	
+	protected static List<String> toCommand(String serial, String... command) {
+		List<String> cmd = new ArrayList<String>();
+		cmd.add("adb");
+		if (serial != null) {
+			cmd.add("-s");
+			cmd.add(serial);
+		}
+		for (String s : command) {
+			cmd.add(s);
+		}
+		return cmd;
+	}
+	
+	public AdbRunner(String serial, String... command) {
+		super(toCommand(serial, command));
+	}
+	
+}

@@ -1,0 +1,61 @@
+package com.gut.core.adb;
+
+import java.io.File;
+
+public class UiDumpReader {
+	
+	private File fileUiDump;
+	
+	public UiDumpReader(File fileUiDump) {
+		this.fileUiDump = fileUiDump;
+	}
+	
+	public boolean loadScreenshotAndXmlDump(File screenshotFile, File xmlDumpFile) {
+        
+		ImageData[] imageData = null;
+		Image image = null;
+            try {
+                // use SWT's ImageLoader to read png from path
+            	imageData = new ImageLoader().load(screenshotFile.getAbsolutePath());
+            } catch (SWTException e) {
+                e.printStackTrace();
+                return false;
+            }
+            // "data" is an array, probably used to handle images that has multiple frames
+            // i.e. gifs or icons, we just care if it has at least one here
+            if (data.length < 1) return false;
+            Node rootNode = new UiHierarchyXmlLoader().parseXml(xmlDumpFile
+                    .getAbsolutePath());
+            if (rootNode == null) {
+                System.err.println("null rootnode after parsing.");
+                return false;
+            }
+            try {
+                // Image is tied to ImageData and a Display, so we only need to create once
+                // per new image
+                img = new Image(mView.getShell().getDisplay(), data[0]);
+            } catch (SWTException e) {
+                e.printStackTrace();
+                return false;
+            }
+            // only update screenhot and xml if both are loaded successfully
+            if (mScreenshot != null) {
+                mScreenshot.dispose();
+            }
+            mScreenshot = img;
+            if (mRootNode != null) {
+                mRootNode.clearAllChildren();
+            }
+            // TODO: we should verify here if the coordinates in the XML matches the png
+            // or not: think loading a phone screenshot with a tablet XML dump
+            mRootNode = rootNode;
+            mScreenshotFile = screenshotFile;
+            mXmlDumpFile = xmlDumpFile;
+            mExploreMode = true;
+            mView.loadScreenshotAndXml();
+            return true;
+        
+        return false;
+    }
+
+}

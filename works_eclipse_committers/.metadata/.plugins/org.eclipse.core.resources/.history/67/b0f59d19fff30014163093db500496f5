@@ -1,0 +1,14 @@
+package com.gut.ui.editors;
+
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.zest.core.viewers.IFigureProvider;
+
+public class LabelProviderImpl implements IFigureProvider {
+
+	@Override
+	public IFigure getFigure(Object arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

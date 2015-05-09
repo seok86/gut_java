@@ -1,0 +1,81 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gut.core.adb.ADB;
+
+public class Explorer {
+		
+	private ADB adb;
+	private File dirWork;
+	private Listener listener;
+	
+	public Explorer(String device, File fileInput, File dirWork) throws IOException {
+		this.adb = new ADB(device);
+		this.dirWork = dirWork;
+	}
+	
+	public interface Listener {
+		void screenCaptured();
+	}
+	public Listener setListener(Listener listener) { this.listener = listener; }
+	
+	public Screen explore() throws IOException {
+		Screen rootScreen = null;
+		
+		List<Screen> screens = new ArrayList<Screen>();
+		Screen oldScreen = null;
+		
+		// first
+		rootScreen = new Screen(dirWork, screens.size());
+		_screenshot(rootScreen);
+		screens.add(rootScreen);
+		
+		oldScreen = rootScreen;
+		
+		// repeat
+		while(true) {
+			
+			List<Element> elements = oldScreen.getElements(false); // not yet clicked elements
+			if(elements.size() == 0) { break; } // exit condition
+			
+			Element element = elements.get(0); // (select first) 
+			_click(element); // click(adb)
+			element.setClicked(true);
+			
+			Screen screen = new Screen(dirWork, screens.size());
+			_screenshot(screen); // screenshot(adb)
+			if(screens.contains(screen)) { screen.dispose(); }
+			else { screens.add(screen); }
+						
+			element.linkScreen(screen);
+			
+			// TODO: notify
+
+			oldScreen = screen;
+		}
+		
+		return rootScreen;
+	}
+	
+	private Screen _screenshot(Screen screen) throws IOException {
+		
+		adb.deleteScreenshot();
+		adb.createScreenshot();
+		adb.pullScreenshot(screen.filePNG);
+		
+		adb.deleteUiDump();
+		adb.createUiDump();
+		adb.pullUiDump(screen.filePNG);
+		
+		return screen;
+	}
+	
+	private void _click(Element element) throws IOException {
+		
+	}
+	
+}

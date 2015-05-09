@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="com.gut.ui.View"
+            id="com.gut.ui.view">
+      </view>
+   </extension>
+   <extension
+         point="common.ui.cache.providers">
+      <imageProvider
+            folder="icons/">
+      </imageProvider>
+   </extension>
+   <extension
+         point="common.ui.workbench.application">
+      <application
+            subtitle="Graphical Unit Test"
+            title="GUT"></application>
+   </extension>
+   <extension
+         point="common.ui.workbench.toolbarItems">
+      <toolbarAction
+            class="com.gut.ui.actions.NewTestProjectAction"
+            location="Left">
+      </toolbarAction>
+      <toolbarAction
+            class="com.gut.ui.actions.NewTestFileAction"
+            location="Left">
+      </toolbarAction>
+      <toolbarAction
+            class="com.gut.ui.actions.ExecuteTestAction"
+            location="Center">
+      </toolbarAction>
+      <toolbarAction
+            class="com.gut.ui.actions.StopTestAction"
+            location="Center">
+      </toolbarAction>
+      <toolbarAction
+            class="com.gut.ui.actions.SettingsAction"
+            location="Right">
+      </toolbarAction>
+   </extension>
+   <extension
+         point="common.ui.workbench.viewLayouts">
+      <viewLayout
+            id="com.gut.ui.views.navigator.ProjectExplorerView"
+            location="LeftTop">
+      </viewLayout>
+      <viewLayout
+            id="com.gut.ui.viewLayout2"
+            location="BottomLeft">
+      </viewLayout>
+   </extension>
+
+</plugin>

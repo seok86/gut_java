@@ -1,0 +1,10 @@
+package com.gut.core.adb;
+
+public class AndroidSDK {
+	
+	private static Tools instTools;
+	public static Tools getTools() {
+		
+	}
+
+}

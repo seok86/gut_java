@@ -1,0 +1,33 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+
+public class Runtime {
+	//-----------------------------------------------------------------------------
+	private static Runtime inst;
+	public static Runtime getInst() {
+		if(inst == null) { inst = new Runtime(); }
+		return inst;
+	}
+	//-----------------------------------------------------------------------------
+	private Runtime() { }
+	
+	public void explore(String device, File fileGUT, File dirGUT) throws Exception {
+		
+		
+		Explorer explorer = new Explorer(device, fileGUT, dirGUT);
+		explorer.setListener(new Listener() {
+			@Override
+			public void screenCaptured(Screen screen) {
+				System.out.println("screenCaptured");
+			}
+		});
+		
+		//String path = "";
+		//_explore(adb, dirWork, path);
+		
+		Screen root = explorer.explore();
+		
+	}
+	
+}

@@ -1,0 +1,13 @@
+package com.gut.core.adb;
+
+import java.util.List;
+
+public class AdbRunner extends ProcessRunner {
+
+	public AdbRunner(List<String> command) {
+		super(command);
+		// TODO Auto-generated constructor stub
+	}
+	
+
+}

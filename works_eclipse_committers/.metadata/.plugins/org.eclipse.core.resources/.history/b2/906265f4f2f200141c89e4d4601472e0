@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="examplezest.ViewPart1"
+            id="ExampleZest.view1"
+            name="Zest Example"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

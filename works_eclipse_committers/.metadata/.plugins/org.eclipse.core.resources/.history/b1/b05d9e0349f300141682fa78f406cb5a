@@ -1,0 +1,33 @@
+package com.bonavision.irsp.ui.views.plan;
+
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerSorter;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: SorterImpl.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class SorterImpl extends ViewerSorter {
+
+	public SorterImpl() { }
+
+	public SorterImpl(Collator collator) {
+		super(collator);
+	}
+	
+	@Override
+	public int compare(Viewer viewer, Object e1, Object e2) {
+		return -1;
+	}
+
+}

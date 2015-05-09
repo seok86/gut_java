@@ -1,0 +1,117 @@
+/*
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.gut.core.resources.nodes;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+public abstract class AbsNode {
+
+    protected AbsNode mParent;
+
+    protected final List<AbsNode> mChildren = new ArrayList<AbsNode>();
+
+    public int x, y, width, height;
+
+    protected boolean mHasBounds = false;
+
+    public void addChild(AbsNode child) {
+        if(child == null) { return; }
+        if(mChildren.contains(child)) { return; }
+        
+        mChildren.add(child);
+        child.mParent = this;
+    }
+    
+    public AbsNode getParent() {
+        return mParent;
+    }
+
+    public boolean hasChild() { return mChildren.size() > 0; }
+    public int getChildCount() { return mChildren.size(); }
+    
+    public List<AbsNode> getChildrenList() {
+        return Collections.unmodifiableList(mChildren);
+    }
+    public AbsNode[] getChildren() {
+        return mChildren.toArray(new AbsNode[0]);
+    }
+
+    public void clearAllChildren() {
+        for(AbsNode child : mChildren) { child.clearAllChildren(); }
+        mChildren.clear();
+    }
+
+    public boolean isAt(int px, int py) {
+    	return x <= px && px <= x+width && y <= py && py <= y+height;
+    }
+    public AbsNode getLeafMostNodeAt(int px, int py) {
+    	for(AbsNode node : mChildren) {
+        	AbsNode found = node.getLeafMostNodeAt(px, py);
+        	if(found != null) return found; 
+        }
+        
+    	if(mHasBounds) {
+            if(isAt(px, py)) { return this; } 
+            else { return null; }
+        } 
+    	else {
+            return null;
+        }
+    }
+
+    public abstract String[] getAttributeKeys();
+	public abstract String getAttributeValue(String key);
+
+
+	public List<AbsNode> getAllNodes(String key, String value) {
+		List<AbsNode> nodes = new Vector<AbsNode>();
+		
+		String realValue = getAttributeValue(key);
+    	if(realValue != null && realValue.equals(value)) {
+    		nodes.add(this);
+        }
+    	
+		for(AbsNode node : mChildren) {
+        	nodes.addAll(node.getAllNodes(key, value));
+        }
+    	
+    	return nodes;
+	}
+	
+
+    @Override
+    public String toString() {
+        //return mDisplayName;
+    	StringBuffer sb = new StringBuffer();
+    	
+    	String id = getAttributeValue("resource-id");
+    	sb.append(id+"(");
+    	AbsNode children[] = getChildren();
+    	for(int i=0; i<getChildCount(); i++) {
+    		sb.append(.toString()+",");
+    	}
+    	for(AbsNode child : getChildren()) {
+    		
+    	}
+    	sb.append(")");
+    }
+	
+
+}

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Runtime
+Bundle-SymbolicName: com.gut.core.runtime;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: GUT
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

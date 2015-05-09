@@ -1,0 +1,62 @@
+package com.bonavision.irsp.ui.views.plan;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+
+import com.bonavision.irsp.core.models.configuration.OprosPackage;
+import com.bonavision.irsp.core.models.opros.comp.MonitoringVariable;
+import com.bonavision.irsp.core.models.opros.service.Method;
+import com.bonavision.irsp.core.models.rcml.Action;
+import com.bonavision.irsp.core.models.rcml.StateVariable;
+import com.bonavision.irsp.core.models.rpml.Definition;
+import com.bonavision.irsp.core.models.rpml.Plan;
+import com.bonavision.utils.xml.XmlUtil;
+
+public class StringDragDataGenerator {
+	
+	public static String generate(Object model) {
+		try {
+			if(model instanceof IProject) {
+				IProject project = (IProject)model;
+				return "plan-group:"+project.getName();
+			}
+			else if(model instanceof IFile && ((IFile)model).getFileExtension().equals("rpml")) {
+				IFile planFile = (IFile)model;
+				Definition definition = ((Plan)XmlUtil.readObject(planFile.getContents(), Plan.class)).definition;
+				return "group:"+planFile.getProjectRelativePath().toString().replace(".rpml", "")+"("+definition.inputs.size()+","+definition.outputs.size()+")";
+			}
+			
+			// UPnP
+			else if(model instanceof StateVariable) {
+				StateVariable sv = (StateVariable)model;
+				String target = sv.parent.parent.name+"/"+sv.parent.name+"/"+sv.name;
+				return "upnp-variable:"+target;
+			}
+			else if(model instanceof Action) {
+				Action action = (Action)model;
+				String target = action.parent.parent.name+"/"+action.parent.name+"/"+action.name;
+				return "upnp-action:"+target+"("+action.inputs.size()+","+action.outputs.size()+")";
+			}
+			
+			// OPRoS
+			else if(model instanceof OprosPackage) {
+				OprosPackage oprosPackage = (OprosPackage)model;
+				return "opros-load:"+oprosPackage.name;
+			}
+			else if(model instanceof MonitoringVariable) {
+				MonitoringVariable variable = (MonitoringVariable)model;
+				System.out.println(variable.parent);
+				System.out.println(variable.parent.tempPackage);
+				return "opros-variable:"+variable.parent.tempPackage.name+"/"+variable.parent.name+"/"+variable.name;
+			}
+			else if(model instanceof Method) {
+				Method method = (Method)model;
+				String target = method.parent.parent.tempPackage.name+"/"+method.parent.parent.name+"/"+method.parent.name+"/"+method.name;
+				return "opros-method:"+target+"("+method.params.size()+","+(method.return_type.equals("void")?0:1)+")";
+			}
+			
+		} catch (Exception e) { e.printStackTrace(); }
+		return "";
+	}
+
+}

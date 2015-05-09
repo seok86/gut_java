@@ -1,0 +1,64 @@
+package com.gut.ui;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.application.IActionBarConfigurer;
+
+
+public class ApplicationActionBarAdvisorImpl extends ApplicationActionBarAdvisor {
+
+	public ApplicationActionBarAdvisorImpl(IActionBarConfigurer configurer) {
+		super(configurer);
+	}
+	
+	private List items = new ArrayList();
+	
+	@Override
+	protected void makeActions(IWorkbenchWindow window) {
+		super.makeActions(window);
+		
+		makeActions(window, "Left");
+		makeActions(window, "Center");
+		makeActions(window, "Right");
+	}
+	
+	private void makeActions(IWorkbenchWindow window, String location){
+		/*for(Object item : ToolbarItemsRegistry.getItems(location)){
+			if(item instanceof ToolbarAction){
+				((ToolbarAction)item).setWorkbenchWindow(window);
+				register((ToolbarAction)item);
+				items.add(item);
+			}
+			else if(item instanceof ToolbarCombo){
+				items.add(item);
+			}
+		}*/
+		
+		
+	}
+	
+	@Override
+	protected void fillCoolBar(ICoolBarManager coolBar) {
+		super.fillCoolBar(coolBar);
+		
+		ToolBarManager toolBar = new ToolBarManager(coolBar.getStyle() | SWT.BOTTOM);
+		coolBar.add(toolBar);
+		
+		/*for(Object item : items){
+			if(item instanceof ToolbarAction){
+				addActionItem(toolBar, (ToolbarAction)item);
+			}
+			else if(item instanceof ToolbarCombo){
+				addControlItem(toolBar, (ToolbarCombo)item);
+			}
+		}*/
+		
+		addControlItem(toolBar, new DummyControlContribution());
+	}
+
+}

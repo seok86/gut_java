@@ -1,0 +1,104 @@
+package com.gut.core.adb;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gut.core.adb.internal.ProcessRunner;
+
+
+public class ADB {
+	
+	public static File getDirSDK() {
+		return new File(System.getenv("ANDROID_HOME"));
+	}
+	public static File getDirPlatformTools() {
+		return new File(getDirSDK(), "platform-tools");
+	}
+	
+	private File dirPlatformTools;
+	private String device = null;
+	
+	public static final String FILE_UIDUMP = "uidump.xml";
+	public static final String FILE_SCREENSHOT = "screenshot.png";
+	
+	public ADB() throws IOException {
+		this(null);
+	}
+	public ADB(String device) throws IOException {
+		this.dirPlatformTools = getDirPlatformTools();
+		this.device = device;
+	}
+	
+	protected ProcessRunner createAdbRunner(String serial, String... command) {
+		List<String> cmd = new ArrayList<String>();
+		cmd.add(dirPlatformTools.getAbsolutePath()+File.separator+"adb");
+		if(serial != null) {
+			cmd.add("-s"); cmd.add(serial);
+		}
+		for(String s : command) {
+			cmd.add(s);
+		}
+		return new ProcessRunner(cmd);
+	}
+	
+	//------------------------------------------------------------------------------------------------------------
+	public List<String> getDevices() throws IOException {
+		List<String> devices = new ArrayList<String>();
+        
+		ProcessRunner runner = createAdbRunner(null, "devices");
+		runner.run(30000);
+        
+		List<String> lines = runner.getOutput();
+		for(int i=1; i<lines.size(); i++) {
+        	String line = lines.get(i);
+        	int sep = line.indexOf('\t');
+        	if(sep != -1) {
+        		String device = line.substring(0, sep);
+        		devices.add(device);
+        	}
+        }
+        return devices;
+	}
+	
+	// UI Dump
+	public void deleteUiDump() throws IOException {
+		ProcessRunner runner = createAdbRunner(device, "shell", "rm", "/sdcard/"+FILE_UIDUMP);
+		runner.run(30000);
+	}
+	
+	public void createUiDump() throws IOException {
+		ProcessRunner runner = createAdbRunner(device, "shell", "/system/bin/uiautomator", "dump", "/sdcard/"+FILE_UIDUMP);
+		runner.run(30000);
+	}
+	
+	public void pullUiDump(File fileTarget) throws IOException {
+		ProcessRunner runner = createAdbRunner(device, "pull", "/sdcard/"+FILE_UIDUMP, fileTarget.getAbsolutePath());
+		runner.run(30000);
+	}
+	
+	// Screenshot
+	public void deleteScreenshot() throws IOException {
+		ProcessRunner runner = createAdbRunner(null, "shell", "rm", "/sdcard/"+FILE_SCREENSHOT);
+		runner.run(30000);
+	}
+	
+	public void createScreenshot() throws IOException {
+		ProcessRunner runner = createAdbRunner(null, "shell", "screencap", "-p", "/sdcard/"+FILE_SCREENSHOT);
+		runner.run(30000);
+	}
+	
+	public void pullScreenshot(File fileTarget) throws IOException {
+		File file = new File(dirWorkingTemp, FILE_UIDUMP);
+		//file.createNewFile();
+		
+		ProcessRunner runner = createAdbRunner(null, "shell", "screencap", "-p", "/sdcard/"+FILE_SCREENSHOT);
+		runner.run(30000);
+		
+		if(!file.isFile()) throw new IOException(); 
+		return file;
+	}
+	// 
+	
+}

@@ -1,0 +1,104 @@
+package com.gut.ui.actions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+
+public abstract class ToolbarCombo<T> extends ControlContribution {
+	
+	protected Label labelTitle;
+	protected ToolItem button;
+	protected Combo combo;
+	private boolean updating = false;
+	
+	public ToolbarCombo() {
+		super("");
+		setId(_getId());
+	}
+	protected abstract String _getId();
+	protected abstract String _getTitleText();
+	protected abstract Image _getButtonIcon();
+
+	@Override
+	protected Control createControl(final Composite parent) {
+		parent.setLayout(null);
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginTop = 0; layout.verticalSpacing = 0; layout.horizontalSpacing = 2;
+		composite.setLayout(layout);
+		
+		labelTitle = new Label(composite, SWT.NONE); 
+		labelTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		labelTitle.setText(_getTitleText());
+		
+		ToolBar toolbar = new ToolBar(composite, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
+		button = new ToolItem(toolbar, SWT.PUSH);
+		button.setImage(_getButtonIcon());
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) { buttonClicked(); }
+		});
+		
+		combo = new Combo(composite, SWT.READ_ONLY | SWT.BORDER | SWT.DROP_DOWN);
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		combo.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) { 
+				if(!updating) { 
+					itemSelected(find(combo.getText())); 
+				} 
+			}
+		});
+		return composite;
+	}
+	
+	protected void buttonClicked() { }
+	
+	public void setItemSelectionEnabled(boolean enabled) { combo.setEnabled(enabled); }
+	
+	private List<T> items = new ArrayList<T>();
+	public void setItems(List<T> items) {
+		this.items = items;
+		final List<String> strItems = new ArrayList<String>();
+		for(T item : items) { strItems.add(getText(item)); }
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				updating = true;
+				String selected = combo.getText();
+				combo.setItems(strItems.toArray(new String[0]));
+				combo.setText(selected);
+				updating = false;
+			}
+		});
+	}
+	
+	protected abstract String getText(T item);
+	private T find(String text) {
+		for(T item : items) { 
+			if(text.equals(getText(item))) { return item; } 
+		}
+		return null;
+	}
+	
+	protected void itemSelected(T item) { }
+	public T getSelection() { return find(combo.getText()); }
+	
+}

@@ -1,0 +1,85 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.gut.core.resources.UiDumpReader;
+import com.gut.core.resources.nodes.AbsNode;
+import com.gut.core.resources.nodes.RootWindowNode;
+import com.gut.core.resources.nodes.UiNode;
+
+import common.core.resources.FileUtil;
+
+public class Screen {
+
+	public File filePNG, fileXML;
+	
+	private RootWindowNode rootNode;
+	private List<Element> elements;
+	
+	public Screen(File dirWork, int n) { 
+		filePNG = new File(dirWork, n+".png");
+		fileXML = new File(dirWork, n+".xml");
+		elements = new ArrayList<Element>();
+	}
+	
+	public void parse() {
+		
+		UiDumpReader reader = new UiDumpReader(fileXML);
+		reader.read();
+		rootNode = reader.getRoot();
+		List<AbsNode> clickableNodes = rootNode.getAllNodes("clickable", "true");
+		for(AbsNode clickableNode : clickableNodes) {
+			Element element = new Element(this, (UiNode)clickableNode);
+			elements.add(element);
+		}
+	}
+	
+	public void dispose() {
+		if(filePNG.exists()) filePNG.delete();
+		if(fileXML.exists()) fileXML.delete();
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) { // VERY IMPORTANT!!
+		//String objName = ((Screen)obj).rootNode.getAttributeValue("window-name");
+		//String thisName = rootNode.getAttributeValue("window-name");
+		//return objName.equals(thisName);
+		Screen objScreen = ((Screen)obj);
+		System.out.println("A: "+(objScreen.rootNode));
+		System.out.println("B: "+(this.rootNode));
+		
+		boolean equal = (objScreen.rootNode).equals(this.rootNode);
+		System.out.println("C: "+equal);
+		System.out.println();
+		/*try {
+			String objData = new String(FileUtil.toByteArray(((Screen)obj).fileXML)).substring(100);
+			String thisData = new String(FileUtil.toByteArray(fileXML)).substring(100);
+			
+			System.out.println("A: "+objData);
+			System.out.println("B: "+thisData);
+			System.out.println("C: "+(objData.equals(thisData)));
+			System.out.println();
+			return objData.equals(thisData);
+		} catch (Exception e) { e.printStackTrace(); }
+		*/
+		return equal;
+	}
+
+	public List<Element> getElements() {
+		return Collections.unmodifiableList(elements);
+	}
+
+	public List<Element> getElements(boolean clicked) {
+		List<Element> filtered = new ArrayList<Element>();
+		for(Element element : elements) {
+			if(element.isClicked() == clicked) filtered.add(element);
+		}
+		return filtered;
+	}
+
+
+}

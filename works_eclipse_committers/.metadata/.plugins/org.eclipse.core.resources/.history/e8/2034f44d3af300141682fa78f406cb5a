@@ -1,0 +1,5 @@
+package com.gut.ui.actions;
+
+public class SampleAction {
+
+}

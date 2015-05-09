@@ -1,0 +1,21 @@
+package com.gut.core.adb;
+
+public class AndroidSDK {
+	
+	public static String getPath() {
+		return System.getenv("ANDROID_HOME");
+	}
+	
+	private static ADB instADB = null;
+	public static ADB getADB() {
+		if(instADB == null) instADB = new ADB();
+		return instADB;
+	}
+	
+	private static Android instAndroid = null;
+	public static Android getAndroid() {
+		if(instAndroid == null) instAndroid = new Android();
+		return instAndroid;
+	}
+
+}

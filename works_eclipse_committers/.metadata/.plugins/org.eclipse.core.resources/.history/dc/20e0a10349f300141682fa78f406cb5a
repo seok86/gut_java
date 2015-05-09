@@ -1,0 +1,28 @@
+package com.bonavision.irsp.ui.views.plan.actions;
+
+import org.eclipse.jface.action.Action;
+
+import com.bonavision.irsp.ui.wizards.plan.NewPlanProjectWizard;
+import com.bonavision.ui.wizards.WizardUtil;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: NewPlanProjectAction.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class NewPlanProjectAction extends Action {
+	
+	public NewPlanProjectAction() {
+		super("New Plan Project", null);
+	}
+	
+	@Override
+	public void run() {
+		WizardUtil.openNewWizard(NewPlanProjectWizard.ID);
+	}
+	
+}

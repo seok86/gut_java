@@ -1,0 +1,10 @@
+package com.gut.core.adb;
+
+public class Android {
+
+	private File dir;
+	
+	public Android(File dir) {
+		this.dir = dir;
+	}
+}

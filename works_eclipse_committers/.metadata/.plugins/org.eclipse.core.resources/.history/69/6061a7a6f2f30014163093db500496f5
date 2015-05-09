@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: File
+Bundle-SymbolicName: com.qandxsoft.common.file;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: QANDXSOFT
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

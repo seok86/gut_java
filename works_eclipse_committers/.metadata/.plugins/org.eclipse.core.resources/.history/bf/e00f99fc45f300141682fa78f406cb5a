@@ -1,0 +1,72 @@
+
+.MTrimmedWindow.topLevel { 
+    margin-top: 5px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.MPartStack {
+    tab-renderer: url('bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.CTabRendering');
+    
+	unselected-tabs-color: #FFFFFF #FFFFFF #FFFFFF 100% 100%;
+    /*outer-keyline-color: #FFFFFF;*/
+    outer-keyline-color: lightGray;
+	inner-keyline-color: lightGray;
+	padding: 0px 9px 10px;
+	tab-outline: lightGray;/*#B6BCCC;*/
+	shadow-visible: true;
+	mru-visible: false;
+	simple: true;
+}
+
+.MPartStack.active {
+	inner-keyline-color: #FFFFFF;
+	tab-outline: #B6BCCC;
+	shadow-visible: true;
+	unselected-tabs-color: #F3F9FF #D0DFEE #CEDDED #CEDDED #D2E1F0 #D2E1F0 #FFFFFF 20% 45% 60% 100% 100% 100%;
+	
+	/*unselected-tabs-color: #F3F9FF #D0DFEE #CEDDED #CEDDED #D2E1F0 #D2E1F0 #FFFFFF 20% 45% 60% 70% 100% 100%;*/
+	outer-keyline-color: #B6BCCC;
+}
+
+#PerspectiveSwitcher {
+	perspective-keyline-color: #AAB0BF #AAB0BF;
+}
+
+
+.MTrimmedWindow { 
+    background-color: #FAEBFF; 
+}
+
+.MTrimBar {
+    background-color: #FAEBFF #D6C7ED #E8D9FF 15% 90%;
+}
+.MToolControl.TrimStack {
+	frame-image:  url(./win7TSFrame.png);
+	handle-image:  url(./win7Handle.png);
+}
+
+
+#PerspectiveSwitcher  {
+	background-color: #F5F7FC #E1E6F6 100%;
+}
+
+#org-eclipse-ui-editorss {
+   tab-renderer: url('bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.CTabRendering');
+   unselected-tabs-color: #F0F0F0 #F0F0F0 #F0F0F0 100% 100%;
+   outer-keyline-color: #B4B4B4;
+   inner-keyline-color: #F0F0F0;
+   tab-outline: #F0F0F0;
+   color: #F0F0F0;
+   tab-height: 8px;
+   padding: 0px 5px 7px;
+}
+
+CTabFolder.MArea .MPartStack, CTabFolder.MArea .MPartStack.active {
+   shadow-visible: false;
+}
+
+CTabFolder Canvas {
+  background-color: #F8F8F8;
+}

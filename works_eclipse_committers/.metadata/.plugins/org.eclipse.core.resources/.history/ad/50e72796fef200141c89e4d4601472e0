@@ -1,0 +1,29 @@
+package com.gut.core.adb;
+
+import java.io.File;
+
+public class AndroidSDK {
+	
+	public static File getDirSDK() {
+		return new File(System.getenv("ANDROID_HOME"));
+	}
+	public static File getDirTools() {
+		return new File(getDirSDK(), "tools");
+	}
+	public static File getDirPlatformTools() {
+		return new File(getDirSDK(), "tools");
+	}
+	
+	private static ADB instADB = null;
+	public static ADB getADB() {
+		if(instADB == null) instADB = new ADB();
+		return instADB;
+	}
+	
+	private static Android instAndroid = null;
+	public static Android getAndroid() {
+		if(instAndroid == null) instAndroid = new Android();
+		return instAndroid;
+	}
+
+}

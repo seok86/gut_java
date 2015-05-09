@@ -1,0 +1,5 @@
+package com.gut.core.adb.internal;
+
+public class AndroidRunner extends ProcessRunner {
+
+}

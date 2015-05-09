@@ -1,0 +1,12 @@
+package com.gut.core.runtime;
+
+public class Element {
+	
+	private boolean clicked = false;
+
+	public boolean isClicked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

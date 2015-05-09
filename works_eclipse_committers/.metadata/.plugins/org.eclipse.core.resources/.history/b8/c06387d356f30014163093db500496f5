@@ -1,0 +1,22 @@
+package com.gut.ui.actions;
+
+import com.gut.ui.ImageCache;
+
+public class NewProjectAction extends ToolbarAction {
+	
+	public NewProjectAction() { 
+		super("new_project");
+		setImageDescriptor(ImageCache.getDescriptor("new_project.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText("New Project");
+	}
+	
+	@Override
+	public void run() {
+		WizardUtil.openNewWizard(NewPlanProjectWizard.ID);
+	}
+
+}

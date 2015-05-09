@@ -1,0 +1,28 @@
+package com.gut.ui;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: WorkspaceSelectionDialogData.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public abstract class WorkspaceSelectionDialogData {
+
+	public String getTitle() {
+		return "Workspace Launcher";
+	}
+
+	public String getTitleText() {
+		return "Select a workspace";
+	}
+
+	public String getMessage() {		
+		return getProductName()+" stores your projects in a folder called a workspace.\nChoose a workspace folder to use for this session.";
+	}
+	
+	protected abstract String getProductName();
+
+}

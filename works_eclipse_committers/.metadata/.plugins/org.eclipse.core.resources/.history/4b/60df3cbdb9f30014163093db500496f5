@@ -1,0 +1,36 @@
+package com.gut.ui.views.plan.providers;
+
+
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.navigator.CommonActionProvider;
+
+import com.gut.ui.views.plan.actions.NewPlanFileAction;
+import com.gut.ui.views.plan.actions.NewPlanFolderAction;
+import com.gut.ui.views.plan.actions.NewPlanProjectAction;
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: ProjectActionProvider.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class ContainerActionProvider extends CommonActionProvider {
+	
+	@Override
+	public void fillContextMenu(IMenuManager menu) { 
+		
+		menu.appendToGroup("group.new", new NewPlanProjectAction());
+		menu.appendToGroup("group.new", new NewPlanFolderAction());
+		menu.appendToGroup("group.new", new NewPlanFileAction());
+		
+		menu.update();
+	}
+	
+	@Override
+	public void fillActionBars(IActionBars actionBars) { }
+
+}

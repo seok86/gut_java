@@ -1,0 +1,34 @@
+package com.bonavision.irsp.ui.views.plan;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+
+import com.bonavision.common.xml.AbsRoot;
+import com.bonavision.common.xml.XmlUtil;
+import com.bonavision.ui.dnd.ByteArrayDragAdapterAssistant;
+
+
+public class DragAdapterAssistantImpl extends ByteArrayDragAdapterAssistant {
+
+	@Override
+	protected byte[] serialize(Object element) {
+		
+		/*if(element instanceof IProject) {
+			IProject project = (IProject)element;
+			return "plan-group:"+project.getName();
+		}
+		else if(model instanceof IFile && ((IFile)model).getFileExtension().equals("rpml")) {
+			IFile planFile = (IFile)model;
+			Definition definition = ((Plan)XmlUtil.readObject(planFile.getContents(), Plan.class)).definition;
+			return "group:"+planFile.getProjectRelativePath().toString().replace(".rpml", "")+"("+definition.inputs.size()+","+definition.outputs.size()+")";
+		}*/
+		
+		// TODO
+		
+		//try {
+		//	return XmlUtil.writeObject();
+		//} catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+
+}

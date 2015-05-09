@@ -1,0 +1,9 @@
+package com.gut.core.runtime.test;
+
+public class Test {
+	
+	public static void main(String[] args) {
+		Runtime.getRuntime();
+	}
+
+}

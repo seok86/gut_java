@@ -1,0 +1,5 @@
+package com.gut.core.adb;
+
+public class AdbRunner {
+
+}

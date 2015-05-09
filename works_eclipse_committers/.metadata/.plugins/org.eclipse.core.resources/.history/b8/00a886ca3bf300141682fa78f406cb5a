@@ -1,0 +1,43 @@
+package com.gut.ui.workbench;
+
+import org.eclipse.ui.IFolderLayout;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+
+
+public class ApplicationPerspective implements IPerspectiveFactory {
+	
+	public static final String ID = "com.gut.ui.workbench.ApplicationPerspective";
+
+	public void createInitialLayout(IPageLayout layout) {
+		layout.setEditorAreaVisible(true);
+		layout.setFixed(true);
+		
+		String editorArea = layout.getEditorArea();
+		{
+			IFolderLayout folder = layout.createFolder("LeftTop", IPageLayout.LEFT, 0.2f, editorArea);
+			folder.addView(View.ID);
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("LeftBottom", IPageLayout.BOTTOM, 0.5f, "LeftTop");
+	        
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomLeft", IPageLayout.BOTTOM, 0.75f, editorArea);
+	        
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomCenter", IPageLayout.RIGHT, 0.33f, "BottomLeft");
+	        
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomRight", IPageLayout.RIGHT, 0.5f, "BottomLeft");
+	        
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("Right", IPageLayout.RIGHT, 0.8f, editorArea);
+	        
+		}
+	}
+
+}

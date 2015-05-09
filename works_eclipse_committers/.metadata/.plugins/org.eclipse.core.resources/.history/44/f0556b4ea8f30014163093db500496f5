@@ -1,0 +1,59 @@
+package com.gut.ui.actions;
+
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+
+public abstract class ToolbarText extends ControlContribution {
+	
+	private Text text;
+	private String title;
+
+	public ToolbarText(String title) {
+		super(title);
+		this.title = title;
+	}
+
+	@Override
+	protected Control createControl(final Composite parent) {
+		parent.setLayout(null);
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(1, true);
+		layout.marginTop = 3;
+		layout.verticalSpacing = 2;
+		layout.horizontalSpacing = 2;
+		composite.setLayout(layout);
+		
+		Label labelTitle = new Label(composite, SWT.NONE); 
+		labelTitle.setText(" "+title); 
+		labelTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		text = new Text(composite, SWT.BORDER);
+		text.setLayoutData(new GridData(100, 15));
+		text.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				boolean check = setCurrentValue(text.getText());
+				if(check){
+					// TODO:
+				}
+			}
+		});
+		
+		text.setText(getCurrentValue());
+	 
+		return composite;
+	}
+	
+	protected abstract String getCurrentValue();
+	protected abstract boolean setCurrentValue(String value);
+	
+}

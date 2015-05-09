@@ -1,0 +1,24 @@
+package com.gut.ui.actions;
+
+import common.ui.cache.ImageCache;
+import common.ui.workbench.toolbar.ToolbarAction;
+
+
+public class ExecuteTestAction extends ToolbarAction {
+	
+	public ExecuteTestAction() { 
+		super("execute");
+		setImageDescriptor(ImageCache.getDescriptor("execute.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText("Execute  ");
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+
+}

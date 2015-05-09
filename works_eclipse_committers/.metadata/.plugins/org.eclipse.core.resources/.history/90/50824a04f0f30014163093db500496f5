@@ -1,0 +1,90 @@
+package com.gut.ui.views.navigator.internal;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+
+
+public class ContentProviderImpl implements ITreeContentProvider {
+
+	@Override
+	public void dispose() { }
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { }
+
+	@Override
+	public Object[] getElements(Object inputElement) {
+		return getChildren(inputElement);
+	}
+
+	@Override
+	public Object[] getChildren(Object parentElement) {
+		if(parentElement instanceof IProject) {
+			
+		}
+		
+		/*if(parentElement instanceof IProject) {
+			IFile config = ((IProject)parentElement).getFile(".config");
+			try {
+				Configuration configuration = (Configuration) XmlUtil.readObject(IFileUtil.toFile(config), Configuration.class);
+				return new Object[] { configuration };
+			} catch (Exception e) { e.printStackTrace(); }
+			return new Object[0];
+		}
+		else if(parentElement instanceof Configuration) {
+			Configuration configuration = (Configuration)parentElement;
+			List list = new ArrayList();
+			list.addAll(configuration.upnpComponents);
+			list.addAll(configuration.oprosPackages);
+			return list.toArray();
+		}
+		else if(parentElement instanceof UpnpComponent) {
+			ExternalProject project = UpnpResourcesPlugin.getWorkspace().getRoot().getProject(((UpnpComponent)parentElement).name);
+			try {
+				Component component = UpnpResourcesNavigator.getComponent(project);
+				return component.services.toArray();
+			} catch (Exception e) { e.printStackTrace(); }
+			return new Object[0];
+		}
+		else if(parentElement instanceof Service) {
+			Service service = (Service)parentElement;
+			List list = new ArrayList();
+			list.addAll(service.stateVariables);
+			list.addAll(service.actions);
+			return list.toArray();
+		}*/
+		/*
+		else if(parentElement instanceof OprosPackage) {
+			OprosPackage oprosPackage = (OprosPackage)parentElement;
+			return oprosPackage.getOprosComponents().toArray();
+		}
+		else if(parentElement instanceof OprosComponent) {
+			ExternalProject project = OprosResourcesPlugin.getWorkspace().getRoot().getProject(((OprosComponent)parentElement).name);
+			try {
+				ComponentProfile component = OprosResourcesNavigator.getComponent(project);
+				component.parse();
+				component.tempPackage = ((OprosComponent)parentElement).getParentOprosPackage(); // IMPORTANT: for Drag
+				List list = new ArrayList();
+				list.addAll(component.exports);
+				list.addAll(component.getProvidedServicePorts());
+				return list.toArray();
+			} catch (Exception e) { e.printStackTrace(); }
+			return new Object[0];
+		}
+		else if(parentElement instanceof ServicePort) {
+			try {
+				return ((ServicePort)parentElement).getMethods().toArray();
+			} catch (Exception e) { e.printStackTrace(); }
+			return new Object[0];
+		}
+		*/
+		return new Object[0];
+	}
+
+	@Override
+	public Object getParent(Object element) { return null; }
+
+	@Override
+	public boolean hasChildren(Object element) { return getChildren(element).length > 0; }
+
+}

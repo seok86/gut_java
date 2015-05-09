@@ -1,0 +1,26 @@
+package com.gut.ui.actions;
+
+import com.bonavision.common.string.StringUtil;
+import com.bonavision.irsp.ui.wizards.plan.NewPlanProjectWizard;
+import com.bonavision.ui.cache.ImageCache;
+import com.bonavision.ui.wizards.WizardUtil;
+import com.bonavision.ui.workbench.toolbar.ToolbarAction;
+
+public class NewProjectAction extends ToolbarAction {
+	
+	public NewProjectAction() { 
+		super("new_project");
+		setImageDescriptor(ImageCache.getDescriptor("new_project_32_32.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText(StringUtil.EXPAND("New Project", 10));
+	}
+	
+	@Override
+	public void run() {
+		WizardUtil.openNewWizard(NewPlanProjectWizard.ID);
+	}
+
+}

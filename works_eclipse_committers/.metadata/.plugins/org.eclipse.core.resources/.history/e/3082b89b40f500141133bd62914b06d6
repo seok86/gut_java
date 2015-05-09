@@ -1,0 +1,41 @@
+package com.gut.core.runtime;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+
+import com.gut.core.adb.ADB;
+import com.gut.core.resources.AbsNode;
+import com.gut.core.resources.RootWindowNode;
+import com.gut.core.resources.UiDumpReader;
+import com.gut.core.resources.UiNode;
+
+import common.core.resources.ResourceUtil;
+
+public class Runtime {
+	//-----------------------------------------------------------------------------
+	private static Runtime inst;
+	public static Runtime getInst() {
+		if(inst == null) { inst = new Runtime(); }
+		return inst;
+	}
+	//-----------------------------------------------------------------------------
+	private Runtime() { }
+	
+	public void explore(String device, File fileGUT, File dirGUT) throws Exception {
+		
+		
+		Explorer explorer = new Explorer(device, fileGUT, dirGUT);
+		
+		//String path = "";
+		//_explore(adb, dirWork, path);
+		
+		Screen root = explorer.explore();
+		
+	}
+	
+}

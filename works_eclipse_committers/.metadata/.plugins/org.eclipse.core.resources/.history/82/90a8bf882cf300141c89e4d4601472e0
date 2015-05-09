@@ -1,0 +1,21 @@
+package com.gut.core.adb;
+
+import java.io.IOException;
+
+public class TestMain {
+
+	public static void main(String[] args) {
+		try {
+
+			ADB adb = new ADB();
+
+			for(String device : adb.getDevices()) {
+				System.out.println(device);
+			}
+			
+			adb.createUiDump(null);
+			
+		} catch (IOException e) { e.printStackTrace(); }
+	}
+	
+}

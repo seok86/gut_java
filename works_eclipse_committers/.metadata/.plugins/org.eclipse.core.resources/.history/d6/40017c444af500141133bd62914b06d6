@@ -1,0 +1,26 @@
+package com.gut.core.runtime;
+
+import com.gut.core.resources.nodes.UiNode;
+
+public class Element {
+	
+	private Screen parent;
+	private UiNode node;
+	
+	private boolean clicked = false;
+	private Screen linked;
+	
+	public Element(Screen parent, UiNode node) {
+		this.parent = parent;
+		this.node = node;
+	}
+	
+	public Screen getParent() { return parent; }
+	
+	public void setClicked(boolean clicked) { this.clicked = clicked; }
+	public boolean isClicked() { return clicked; }
+
+	public void linkScreen(Screen screen) { linked = screen; }
+	public Screen getLinkedScreen() { return linked; }
+
+}

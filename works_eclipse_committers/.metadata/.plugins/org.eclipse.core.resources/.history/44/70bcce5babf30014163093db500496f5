@@ -1,0 +1,163 @@
+package com.bonavision.ui.views;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ViewPart;
+
+import com.bonavision.ui.dnd.DragUtil;
+import com.bonavision.ui.dnd.DragUtil.DragDataProvider;
+import com.bonavision.ui.editors.EditorUtil;
+import common.ui.cache.ColorCache;
+
+public abstract class AbsTreeViewPart extends ViewPart {
+	
+	//protected FormToolkit toolkit;
+	//protected ScrolledForm form;
+	protected ScrolledComposite scrolledComposite;
+	
+	protected TreeViewer treeViewer;
+	protected Tree tree;
+	
+	protected abstract ITreeContentProvider createTreeContentProvider();
+	protected abstract ILabelProvider createLabelProvider();
+	protected abstract Object getInput();
+	protected IEditorInput createEditorInput(Object element) { return null; }
+
+	protected List<Action> createToolbarActions() { return Collections.EMPTY_LIST; }
+	protected List<Action> createMenuActions(Object item) { return Collections.EMPTY_LIST; }
+	
+	protected abstract String createDragAndDropData(Object item);
+
+	@Override
+	public void createPartControl(Composite parent) {
+		//---------------------------------------------------------------------------------------
+		IToolBarManager toolBar = getViewSite().getActionBars().getToolBarManager();
+		for(Action action : createToolbarActions()) { toolBar.add(action); }
+		//---------------------------------------------------------------------------------------
+		{
+			FillLayout layout = (FillLayout)parent.getLayout();
+			layout.marginWidth = -5; 
+			layout.marginHeight = -5;
+			layout.spacing = 0; 
+		}
+		//---------------------------------------------------------------------------------------
+		Composite composite = new Composite(parent, SWT.NONE);
+		{
+			GridLayout layout = new GridLayout(1, false); 
+			layout.marginLeft = layout.marginRight = layout.marginTop = layout.marginBottom = 0;
+			layout.horizontalSpacing = layout.verticalSpacing = 0; 
+			composite.setLayout(layout);
+		}
+		//---------------------------------------------------------------------------------------
+		createHeader(composite);
+		//---------------------------------------------------------------------------------------
+		createBody(composite);
+		//---------------------------------------------------------------------------------------
+		refresh();
+	}
+	
+	protected void createHeader(Composite composite) {
+		
+	}
+	
+	protected void createBody(Composite composite) {
+		scrolledComposite = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL );
+		scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		scrolledComposite.setBackground(ColorCache.white);
+		//---------------------------------------------------------------------------------------
+		treeViewer = new TreeViewer(scrolledComposite, SWT.NONE);
+		scrolledComposite.setContent(treeViewer.getControl());
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setExpandHorizontal(true);
+		//---------------------------------------------------------------------------------------
+		treeViewer.setContentProvider(createTreeContentProvider());
+		treeViewer.setLabelProvider(new DecoratingLabelProvider(createLabelProvider(), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		treeViewer.setInput(getInput());
+		
+		tree = (Tree)treeViewer.getControl();
+		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
+		tree.addMouseWheelListener(new MouseWheelListener() {
+			@Override public void mouseScrolled(MouseEvent e) {
+				Point origin = scrolledComposite.getOrigin();
+				if (e.count < 0) {
+					origin.y = Math.min(origin.y + tree.getItemHeight(), tree.getSize().y);
+				} else {
+					origin.y = Math.max(origin.y - tree.getItemHeight(), 0);
+				}
+				scrolledComposite.setOrigin(origin);
+			}
+		});
+
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection thisSelection = (IStructuredSelection)event.getSelection();
+				Object item = thisSelection.getFirstElement();
+				open(item);
+			}
+		});
+		
+		MenuManager menuMgr = new MenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		getSite().registerContextMenu(menuMgr, treeViewer);
+		Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
+		treeViewer.getControl().setMenu(menu);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				Object element = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
+				for(Action action : createMenuActions(element)) { manager.add(action); }
+			}
+		});
+		
+	}
+	
+	@Override
+	public void setFocus() { 
+		tree.setFocus();
+	}
+
+	public void refresh() {
+		treeViewer.refresh();
+	}
+	public void select(Object item) {
+		treeViewer.setSelection(new StructuredSelection(item));
+	}
+	public void open(Object item) {
+		IEditorInput input = createEditorInput(item);
+		if(input == null) { 
+			treeViewer.setExpandedState(item, !treeViewer.getExpandedState(item));
+		}
+		else {
+			EditorUtil.openEditor(input);
+		}
+	}
+
+}

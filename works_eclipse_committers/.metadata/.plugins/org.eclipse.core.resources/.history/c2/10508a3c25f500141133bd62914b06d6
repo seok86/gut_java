@@ -1,0 +1,52 @@
+package com.gut.ui.actions;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.FileEditorInput;
+
+import com.gut.core.runtime.IFolder;
+import com.gut.ui.editors.TestFileEditor;
+
+import common.ui.cache.ImageCache;
+import common.ui.editors.EditorUtil;
+import common.ui.workbench.toolbar.ToolbarAction;
+
+
+public class ExecuteTestAction extends ToolbarAction {
+	
+	public ExecuteTestAction() { 
+		super("execute");
+		setImageDescriptor(ImageCache.getDescriptor("execute.png"));
+	}
+	
+	@Override
+	protected void init() {
+		setText("Execute  ");
+	}
+	
+	@Override
+	public void run() {
+		IEditorPart editorPart = EditorUtil.getCurrentEditor();
+		if(editorPart == null) return;
+		FileEditorInput editorInput = (FileEditorInput) editorPart.getEditorInput();
+		IFile file = editorInput.getFile();
+		
+		
+		IFolder dirWork = file.getProject().getFolder(file.getParent().getProjectRelativePath().append(targetGutFile.getName().replace("."+targetGutFile.getFileExtension(), "_gut")));
+		dirWork.create(true, true, null);
+		
+		// Ready file for inputs - TODO
+		
+		// Push Apk - TODO
+		
+		// Start Apk - TODO
+		
+		// Exploration
+		/*try {
+			Explorer.getInst().explore(file, null);
+		} catch (Exception e) { e.printStackTrace(); }*/
+	
+		((TestFileEditor)editorPart).show();
+	}
+	
+}

@@ -1,0 +1,54 @@
+package com.gut.ui.editors;
+
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
+import org.eclipse.zest.core.viewers.INestedContentProvider;
+
+public class ContentProviderImpl implements IGraphEntityContentProvider, INestedContentProvider {
+	
+	public Object[] getConnectedTo(Object entity) {
+		if (entity.equals("root")) {
+			return new Object[] { "1" };
+		}
+		if (entity.equals("1")) {
+			return new Object[] { "2", "3", "4" };
+		}
+		if (entity.equals("2")) {
+			return new Object[] { "1", "3", "4" };
+		}
+		if (entity.equals("3")) {
+			return new Object[] { "1", "2", "4" };
+		}
+		if (entity.equals("4")) {
+			return new Object[] { "1", "2", "3" };
+		}
+		return null;
+	}
+
+	public Object[] getElements(Object inputElement) {
+		return new String[] { "root", "1", "2", "3", "4" };
+	}
+
+	public double getWeight(Object entity1, Object entity2) {
+		return 0;
+	}
+
+	public void dispose() {
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public Object[] getChildren(Object element) {
+		if(element.equals("root"))
+		return new String[] { "1", "2", "3", "4" };
+	}
+
+	public boolean hasChildren(Object element) {
+		// TODO Auto-generated method stub
+		if (element.equals("First"))
+			return true;
+		return false;
+	}
+	
+}

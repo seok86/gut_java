@@ -1,0 +1,7 @@
+package com.gut.ui.editors;
+
+import org.eclipse.zest.core.viewers.IFigureProvider;
+
+public class ZestLabelProvider implements IFigureProvider {
+
+}

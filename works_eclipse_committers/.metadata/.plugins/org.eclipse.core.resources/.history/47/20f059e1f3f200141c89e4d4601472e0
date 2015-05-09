@@ -1,0 +1,60 @@
+package com.gut.example.zest;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
+import org.eclipse.zest.core.widgets.ConstraintAdapter;
+import org.eclipse.zest.core.widgets.Graph;
+import org.eclipse.zest.core.widgets.GraphConnection;
+import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+import org.eclipse.zest.layouts.constraints.BasicEdgeConstraints;
+import org.eclipse.zest.layouts.constraints.LayoutConstraint;
+
+public class ExampleZestView extends ViewPart {
+
+	@Override
+	public void createPartControl(Composite parent) {
+		final Graph g = new Graph(parent, SWT.NONE);
+		GraphNode root = new GraphNode(g, SWT.NONE, "Root");
+		for (int i = 0; i < 3; i++) {
+			GraphNode n = new GraphNode(g, SWT.NONE, "1 - " + i);
+			for (int j = 0; j < 3; j++) {
+				GraphNode n2 = new GraphNode(g, SWT.NONE, "2 - " + j);
+				new GraphConnection(g, SWT.NONE, n, n2);
+			}
+			new GraphConnection(g, SWT.NONE, root, n);
+		}
+
+		TreeLayoutAlgorithm layoutAlgo = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
+
+		ConstraintAdapter constraintAdapters = new ConstraintAdapter() {
+
+			public void populateConstraint(Object object, LayoutConstraint constraint) {
+				if (constraint instanceof BasicEdgeConstraints) {
+					BasicEdgeConstraints basicEdgeConstraints = (BasicEdgeConstraints) constraint;
+					GraphConnection connection = (GraphConnection) object;
+					if (connection.getSource().getText().equals("Root")) {
+						basicEdgeConstraints.weight = 1;
+					}
+					else {
+						basicEdgeConstraints.weight = -1;
+					}
+				}
+
+			}
+		};
+
+		g.addConstraintAdapter(constraintAdapters);
+		g.setLayoutAlgorithm(layoutAlgo, true);
+	}
+
+	@Override
+	public void setFocus() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,91 @@
+package com.gut.ui.views.resources;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.part.FileEditorInput;
+
+import common.ui.editors.EditorUtil;
+
+public class PlanProjectsView extends CommonNavigator {
+	
+	/*private PlanResourcesNavigator.Listener listener = new PlanResourcesNavigator.Listener() {
+		@Override
+		public void selectionChanged(IProject project) { refresh(); }
+		@Override
+		public void listChanged(IProject project, IProject[] projects) { }
+	};*/
+	
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		
+		//DefaultToolTip toolTip = new FigureToolTip(getCommonViewer().getControl(), new ToolTipFigureProviderImpl());
+		//toolTip.setShift(new Point(10, 10));
+		
+		//PlanResourcesNavigator.getInstance().addListener(listener);
+		
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+			@Override
+			public void resourceChanged(IResourceChangeEvent event) {
+				try {
+					event.getDelta().accept(new IResourceDeltaVisitor() {
+						@Override
+						public boolean visit(IResourceDelta delta) throws CoreException {
+							IResource resource = delta.getResource();
+							if(resource != null && resource instanceof IFile && ((IFile)resource).getName().equals(".config")) {
+								refresh();
+								return false;
+							}
+							return true;
+						}
+					});
+				} catch (CoreException e) { e.printStackTrace(); }
+			}
+		});
+		
+		getCommonViewer().addOpenListener(new IOpenListener() {
+			@Override
+			public void open(OpenEvent event) {
+				Object element = ((IStructuredSelection)event.getSelection()).getFirstElement();
+				
+				if(element instanceof IFile) {
+					IFile file = (IFile)element;
+					EditorUtil.openEditor(new FileEditorInput(file));
+				}
+				/*if(element instanceof Configuration) {
+					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(((Configuration)element).getFile().getParentFile().getName());
+					IFile configFile = project.getFile(".config");
+					
+					EditorUtil.openEditor(new FileEditorInput(configFile) {
+						@Override
+						public String getName() { return getFile().getProject().getName(); }
+					}, ConfigurationDiagramEditor.ID);
+				}*/
+			}
+		});
+	}
+	
+	@Override
+	public void dispose() {
+		//PlanResourcesNavigator.getInstance().removeListener(listener);
+		super.dispose();
+	}
+	
+	public void refresh() {
+		//TreePath[] paths = getCommonViewer().getExpandedTreePaths();
+		getCommonViewer().refresh();
+		//getCommonViewer().setExpandedTreePaths(paths);
+	}
+	
+}

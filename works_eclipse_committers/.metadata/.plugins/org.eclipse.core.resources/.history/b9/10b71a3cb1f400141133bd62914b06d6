@@ -1,0 +1,37 @@
+package com.gut.ui.editors;
+
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.zest.core.viewers.EntityConnectionData;
+import org.eclipse.zest.core.viewers.IFigureProvider;
+
+import common.ui.cache.ImageCache;
+
+public class LabelProviderImpl extends LabelProvider implements IFigureProvider {
+
+	final Image image = Display.getDefault().getSystemImage(SWT.ICON_WARNING);
+
+	public Image getImage(Object element) {
+		if (element instanceof EntityConnectionData)
+			return null;
+		return null;
+	}
+
+	public String getText(Object element) {
+		if (element instanceof EntityConnectionData)
+			return "touch";
+		return element.toString();
+	}
+
+	public IFigure getFigure(Object element) {
+		if (element instanceof EntityConnectionData) return null;
+		
+		Image image = ImageCache.get("screenshot_"+element+".png");
+		return new Label(element+"", image);
+	}
+
+}

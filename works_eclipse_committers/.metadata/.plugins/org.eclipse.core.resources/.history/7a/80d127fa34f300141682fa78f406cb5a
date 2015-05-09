@@ -1,0 +1,66 @@
+package com.qandxsoft.common.ui.workbench;
+
+import org.eclipse.ui.IFolderLayout;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
+
+import com.qandxsoft.common.ui.workbench.internal.ViewLayoutsRegistry;
+
+
+/**
+ * <pre>
+ * 
+ * </pre> 	
+ * @filename: MainPerspective.java
+ * @copyright: Bonavision, Inc. 2013.
+ * @created 2013. 8. 14.
+ * @author Yongseok Kim (yongseok.kim@bonavision.net)
+ */
+public class ApplicationPerspective implements IPerspectiveFactory {
+	
+	public static final String ID = "com.gut.ui.workbench.ApplicationPerspective";
+
+	public void createInitialLayout(IPageLayout layout) {
+		layout.setEditorAreaVisible(true);
+		layout.setFixed(true);
+		
+		String editorArea = layout.getEditorArea();
+		{
+			IFolderLayout folder = layout.createFolder("LeftTop", IPageLayout.LEFT, 0.2f, editorArea);
+			for(String view : ViewLayoutsRegistry.getLayouts("LeftTop")) {
+				folder.addView(view);
+			}
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("LeftBottom", IPageLayout.BOTTOM, 0.5f, "LeftTop");
+	        for(String view : ViewLayoutsRegistry.getLayouts("LeftBottom")) {
+	        	folder.addView(view);
+			}
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomLeft", IPageLayout.BOTTOM, 0.75f, editorArea);
+	        for(String view : ViewLayoutsRegistry.getLayouts("BottomLeft")) {
+	        	folder.addView(view);
+			}
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomCenter", IPageLayout.RIGHT, 0.33f, "BottomLeft");
+	        for(String view : ViewLayoutsRegistry.getLayouts("BottomCenter")) {
+	        	folder.addView(view);
+			}
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("BottomRight", IPageLayout.RIGHT, 0.5f, "BottomLeft");
+	        for(String view : ViewLayoutsRegistry.getLayouts("BottomRight")) {
+	        	folder.addView(view);
+			}
+		}
+		{
+	        IFolderLayout folder = layout.createFolder("Right", IPageLayout.RIGHT, 0.8f, editorArea);
+	        for(String view : ViewLayoutsRegistry.getLayouts("Right")) {
+	        	folder.addView(view);
+			}
+		}
+	}
+
+}

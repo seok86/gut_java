@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            class="com.gut.ui.wizards.plan.NewTestProjectWizard"
+            icon="icons/prj_obj.gif"
+            id="com.gut.ui.wizards.plan.NewTestProjectWizard"
+            name="Plan Project"
+            project="true">
+      </wizard>
+      <wizard
+            class="com.gut.ui.wizards.plan.NewTestFolderWizard"
+            icon="icons/folder.gif"
+            id="com.bonavision.irsp.ui.wizards.plan.NewPlanFolderWizard"
+            name="Folder"
+            project="false">
+      </wizard>
+      <wizard
+            class="com.gut.ui.wizards.plan.NewTestFileWizard"
+            icon="icons/fileType_filter.gif"
+            id="com.bonavision.irsp.ui.wizards.plan.NewPlanFileWizard"
+            name="Plan File"
+            project="false">
+      </wizard>
+   </extension>
+</plugin>

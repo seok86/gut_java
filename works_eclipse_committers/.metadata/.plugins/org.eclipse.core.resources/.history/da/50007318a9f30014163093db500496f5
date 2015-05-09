@@ -1,0 +1,28 @@
+package common.ui.workbench.internal;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+
+public class ApplicationRegistry {
+	
+	private static String get(String attribute) {
+		try {
+			IExtensionRegistry reg = Platform.getExtensionRegistry();
+			IConfigurationElement[] extensions = reg.getConfigurationElementsFor("com.bonavision.ui.workbench.application");
+			if(extensions.length == 0){	return ""; }
+			IConfigurationElement element = extensions[0];
+			return element.getAttribute(attribute);
+		} catch (Exception e){ e.printStackTrace(); }
+		return "";
+	}
+
+	public static String getTitle() {
+		return get("title");
+	}
+	
+	public static String getSubTitle() {
+		return get("subtitle");
+	}
+	
+}

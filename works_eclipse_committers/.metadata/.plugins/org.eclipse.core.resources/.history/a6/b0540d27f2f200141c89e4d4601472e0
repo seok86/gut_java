@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ExampleZest
+Bundle-SymbolicName: ExampleZest;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.zest.core;bundle-version="1.5.100",
+ org.eclipse.zest.layouts;bundle-version="1.1.100",
+ org.eclipse.ui.views;bundle-version="3.7.0",
+ org.eclipse.ui;bundle-version="3.106.1"
